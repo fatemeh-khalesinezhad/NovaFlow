@@ -1,0 +1,36 @@
+NovaFlow Store/
+├── assets/
+│   ├── css/
+│   │   └── style.css          (your merged CSS)
+│   ├── js/
+│   │   └── script.js          (your merged JS)
+│   └── images/
+│       └── products/          (product images)
+├── config/
+│   └── database.php           (DB connection)
+├── includes/
+│   ├── header.php
+│   ├── footer.php
+│   └── auth_check.php         (reusable auth guard)
+├── admin/
+│   ├── products.php           (CRUD)
+│   ├── orders.php             (manage orders)
+│   └── action/
+│       ├── product_action.php
+│       └── order_action.php
+├── user/
+│   ├── orders.php
+│   └── action/
+│       └── order_action.php
+├── public/
+│   ├── index.php              (homepage — products listing)
+│   ├── product.php            (detail)
+│   ├── about.php
+│   ├── contact.php
+│   ├── login.php
+│   └── register.php
+├── uploads/
+│   └── products/              (uploaded images)
+├── vendor/                    (optional, if you use composer)
+├── .htaccess                  (clean URLs, security)
+└── README.md                  (documentation)

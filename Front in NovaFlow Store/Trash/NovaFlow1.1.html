@@ -1,0 +1,686 @@
+
+<!doctype html>
+<html lang="en" class="dark h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaFlow Store</title>
+  <!-- <script src="/_sdk/element_sdk.js"></script> -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;family=DM+Sans:wght@300;400;500;700&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+
+      colors: {
+        'neon-blue': '#00d4ff',
+        'neon-purple': '#7c3aed',
+        'neon-pink': '#ec4899',
+        'dark-900': '#0a0a0f',
+        'dark-800': '#12121a',
+        'dark-700': '#1a1a2e',
+        'dark-600': '#252540'
+      },
+      fontFamily: {
+        display: ['Outfit', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif']
+      }
+    }
+  }
+}
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+html, body { height: 100%; margin: 0; }
+body { font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+
+.dark body, .dark { background: #0a0a0f; color: #fff; }
+html:not(.dark) body { background: #f8fafc; color: #1a1a2e; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: linear-gradient(#7c3aed, #00d4ff); border-radius: 3px; }
+
+/* Glass */
+.glass { background: rgba(18,18,26,0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); }
+html:not(.dark) .glass { background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.08); }
+
+/* Gradient text */
+.gradient-text { background: linear-
+
+gradient(135deg, #00d4ff, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* Animations */
+@keyframes fadeUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideIn { from { transform:translateX(100%); } to { transform:translateX(0); } }
+@keyframes slideInLeft { from { transform:translateX(-100%); } to { transform:translateX(0); } }
+@keyframes pulseGlow { 0%,100% { box-shadow: 0 0 20px rgba(0,212,255,0.3); } 50% { box-shadow: 0 0 40px rgba(124,58,237,0.5); } }
+@keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-20px); } }
+
+@keyframes gridMove { from { transform:translate(0,0); } to { transform:translate(50px,50px); } }
+@keyframes scanline { from { top:-10%; } to { top:110%; } }
+@keyframes matrixFall { from { transform:translateY(-100%); } to { transform:translateY(100%); } }
+@keyframes particleFloat { from { transform:translateY(100%) scale(0); opacity:0; } 10% { opacity:1; scale:1; } to { transform:translateY(-100%) scale(0.5); opacity:0; } }
+@keyframes rotateBg { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+@keyframes spinGlow { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+
+.animate-fade-up { animation: fadeUp 0.6s ease forwards; opacity:0; }
+.animate-fade-in { animation: fadeIn 0.5s 
+
+ease forwards; opacity:0; }
+.animate-slide-in { animation: slideIn 0.3s ease forwards; }
+.animate-slide-in-left { animation: slideInLeft 0.3s ease forwards; }
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+
+/* Card hover */
+.card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+.card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,212,255,0.15); }
+
+/* Button glow */
+.btn-glow { position: relative; overflow: hidden; }
+.btn-glow::before { content:''; position:absolute; inset:-2px; background: conic-gradient(from 0deg, #00d4ff, #7c3aed, #ec4899, #00d4ff); border-radius: 
+
+inherit; z-index:-1; animation: spinGlow 3s linear infinite; opacity:0; transition: opacity 0.3s; }
+.btn-glow:hover::before { opacity:1; }
+
+/* Grid bg */
+.grid-bg { background-image: linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px); background-size: 60px 60px; }
+
+/* Mouse glow */
+#mouse-glow { position:fixed; width:400px; height:400px; border-radius:50%; pointer-events:none; z-index:9999; background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%); transform:translate(-50%,-50%); transition: left 0.1s, top 0.1s; }
+html:not(.dark) #mouse-glow { background: radial-gradient(circle, rgba(124,58,237,0.05) 0%, transparent 70%); }
+
+
+/* BG layers */
+.bg-rotating { position:fixed; inset:0; z-index:0; opacity:0.15; animation: rotateBg 30s linear infinite; filter:blur(40px);
+  background: radial-gradient(circle at 20% 50%, #00d4ff 0%, transparent 50%), radial-gradient(circle at 80% 20%, #ec4899 0%, transparent 50%), radial-gradient(circle at 50% 80%, #7c3aed 0%, transparent 50%); }
+
+.matrix-col { position:absolute; writing-mode:vertical-rl; font-size:14px; opacity:0.15; font-family:monospace; animation: matrixFall linear infinite; }
+.orb { position:fixed; border-radius:50%; filter:blur(80px); opacity:0.2; animation: float 6s ease-in-out infinite; }
+.grid-overlay { position:fixed; inset:0; opacity:0.03; background-image: linear-gradient(rgba(0,212,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.5) 1px, transparent 1px); background-size:50px 50px; animation: 
+
+gridMove 20s linear infinite; }
+.scanline-sweep { position:fixed; left:0; width:100%; height:2px; background: linear-gradient(90deg, transparent, #00d4ff, transparent); animation: scanline 8s linear infinite; z-index:1; }
+
+/* Toast */
+.toast { position:fixed; bottom:20px; right:20px; z-index:10000; animation: slideIn 0.3s ease; }
+
+/* Chatbot */
+.chatbot-container { position:fixed; bottom:80px; right:20px; width:350px; max-height:500px; z-index:9998; }
+@media(max-width:640px) { .chatbot-container { width:calc(100% - 40px); right:20px; bottom:70px; } }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+   <!-- <script src="/_sdk/data_sdk.js" type="text/javascript"></script> -->
+
+ </head>
+ <body class="h-full">
+  <div id="mouse-glow"></div><!-- BG Effects -->
+  <div class="bg-rotating"></div>
+  <div class="grid-overlay"></div>
+  <div class="grid-overlay" style="background-size:100px 100px;animation-direction:reverse;animation-duration:30s;"></div>
+  <div class="scanline-sweep"></div>
+  <div class="orb" style="width:350px;height:350px;background:#00d4ff;top:10%;left:10%;"></div>
+  <div class="orb" style="width:300px;height:300px;background:#ec4899;top:60%;right:10%;animation-delay:2s;"></div>
+  <div class="orb" style="width:400px;height:400px;background:#7c3aed;bottom:10%;left:40%;animation-delay:4s;"></div>
+
+  <div id="matrix-container" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;"></div>
+  <div id="particles-container" style="position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;"></div><!-- Main App -->
+  <div id="app" class="relative z-10 h-full overflow-auto"><!-- Nav -->
+   <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 glass transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between"><a href="#" onclick="navigate('home')" class="font-display font-bold text-xl gradient-text" id="nav-store-name">NovaFlow Store</a>
+     <div class="hidden md:flex items-center gap-6"><a href="#" onclick="navigate('home')" class="text-sm hover:text-neon-blue transition">Home</a> <a href="#" onclick="navigate('shop')" 
+
+class="text-sm hover:text-neon-blue transition">Shop</a> <a href="#" onclick="navigate('about')" class="text-sm hover:text-neon-blue transition">About</a> <a href="#" onclick="navigate('faq')" class="text-sm hover:text-neon-blue transition">FAQ</a>
+     </div>
+     <div class="flex items-center gap-3"><button onclick="toggleTheme()" class="p-2 rounded-lg hover:bg-dark-700 transition" aria-label="Toggle theme"><i data-lucide="sun" class="w-5 h-5 dark:hidden"></i><i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i></button> <button onclick="navigate('wishlist')" class="p-2 rounded-lg hover:bg-dark-700 transition relative" aria-label="Wishlist"><i data-lucide="heart" class="w-5 h-5"></i><span id="wish-count" class="absolute -top-1 -right-1 w-4 h-4 bg-neon-pink text-[10px] rounded-full flex items-center justify-center 
+
+hidden">0</span></button> <button onclick="navigate('cart')" class="p-2 rounded-lg hover:bg-dark-700 transition relative" aria-label="Cart"><i data-lucide="shopping-cart" class="w-5 h-5"></i><span id="cart-count" class="absolute -top-1 -right-1 w-4 h-4 bg-neon-blue text-[10px] text-dark-900 rounded-full flex items-center justify-center hidden">0</span></button> <button onclick="toggleMobileMenu()" class="md:hidden p-2" aria-label="Menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+     </div>
+    </div>
+   </nav><!-- Mobile Menu -->
+   <div id="mobile-menu" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-black/60" onclick="toggleMobileMenu()"></div>
+    <div class="absolute right-0 top-0 h-full w-64 glass p-6 animate-slide-in"><button onclick="toggleMobileMenu()" class="mb-6"><i data-lucide="x" class="w-6 
+
+h-6"></i></button>
+     <div class="flex flex-col gap-4"><a href="#" onclick="navigate('home');toggleMobileMenu()" class="text-lg">Home</a> <a href="#" onclick="navigate('shop');toggleMobileMenu()" class="text-lg">Shop</a> <a href="#" onclick="navigate('about');toggleMobileMenu()" class="text-lg">About</a> <a href="#" onclick="navigate('faq');toggleMobileMenu()" class="text-lg">FAQ</a>
+     </div>
+    </div>
+   </div><!-- Content -->
+   <main id="main-content" class="pt-16"></main><!-- Cookie Banner -->
+   <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[9990] glass p-4 hidden">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+     <p class="text-sm opacity-80">We use 
+
+cookies to enhance your experience.</p>
+     <div class="flex gap-2"><button onclick="acceptCookies()" class="px-4 py-2 bg-neon-blue text-dark-900 rounded-lg text-sm font-semibold">Accept</button> <button onclick="dismissCookies()" class="px-4 py-2 border border-white/10 rounded-lg text-sm">Dismiss</button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Chatbot Toggle --> <button id="chat-toggle" onclick="toggleChat()" class="fixed bottom-5 right-5 z-[9998] w-14 h-14 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center shadow-lg hover:scale-110 transition-transform" aria-label="Chat"> <i data-lucide="message-circle" class="w-6 h-6 text-white"></i> </button> <!-- Chatbot -->
+  <div id="chatbot" class="chatbot-container glass rounded-2xl hidden flex-col">
+   <div class="p-4 border-b border-white/10 flex items-center justify-between">
+
+    <div class="flex items-center gap-2">
+     <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div><span class="font-display font-semibold text-sm">Nova Assistant</span>
+    </div><button onclick="toggleChat()"><i data-lucide="x" class="w-4 h-4"></i></button>
+   </div>
+   <div id="chat-messages" class="flex-1 overflow-auto p-4 space-y-3" style="max-height:350px;"></div>
+   <form onsubmit="sendChat(event)" class="p-3 border-t border-white/10 flex gap-2"><input id="chat-input" type="text" placeholder="Ask me anything..." class="flex-1 bg-dark-700 dark:bg-dark-700 bg-gray-100 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-neon-blue" autocomplete="off"> <button type="submit" class="p-2 bg-neon-blue rounded-lg text-dark-900"><i data-lucide="send" class="w-4 h-4"></i></button>
+   </form>
+
+  </div><!-- Toast container -->
+  <div id="toast-container"></div>
+  <script>
+// ===== DATA =====
+const categories = ['All','Laptops','Phones','Audio','Wearables','Accessories','Gaming','Monitors','Storage','Cameras'];
+const products = [
+  {id:1,name:'Nova Pro 16" Laptop',cat:'Laptops',price:2499,rating:4.9,img:'💻',desc:'M3 Max chip, 64GB RAM, stunning display',badge:'New'},
+  {id:2,name:'Quantum Phone X',cat:'Phones',price:1199,rating:4.8,img:'📱',desc:'6.7" OLED, 200MP camera, all-day battery',badge:'Hot'},
+  {id:3,name:'AirPulse Pro Buds',cat:'Audio',price:349,rating:4.7,img:'🎧',desc:'Spatial audio, 40hr battery, ANC',badge:''},
+  {id:4,name:'Chrono Ultra Watch',cat:'Wearables',price:799,rating:4.6,img:'⌚',desc:'Titanium, 72hr battery, health sensors',badge:''},
+  {id:5,name:'ThunderDock Pro',cat:'Accessories',price:299,rating:4.5,img:'🔌',desc:'16-in-1 USB-C hub, 100W PD',badge:''},
+  {id:6,name:'Stealth Gaming Mouse',cat:'Gaming',price:149,rating:4.8,img:'🖱️',desc:'26K DPI, 60g ultralight, RGB',badge:''},
+  {id:7,name:'UltraWide 34" Monitor',cat:'Monitors',price:899,rating:4.7,img:'🖥️',desc:'3440x1440, 175Hz, HDR600',badge:'New'},
+  {id:8,name:'NovaDrive 4TB SSD',cat:'Storage',price:449,rating:4.6,img:'💾',desc:'7000MB/s read, NVMe Gen5',badge:''},
+  {id:9,name:'ProCam 8K',cat:'Cameras',price:3299,rating:4.9,img:'📸',desc:'Full-frame, 8K60, AI autofocus',badge:'Pro'},
+  {id:10,name:'MechForce Keyboard',cat:'Gaming',price:199,rating:4.7,img:'⌨️',desc:'Gasket mount, hot-swap, RGB',badge:''},
+  {id:11,name:'Nova Air 14" Laptop',cat:'Laptops',price:1799,rating:4.8,img:'💻',desc:'Fanless, 2.2lb, 22hr battery',badge:''},
+  {id:12,name:'Quantum Phone SE',cat:'Phones',price:699,rating:4.5,img:'📱',desc:'Compact flagship, ceramic build',badge:''},
+  {id:13,name:'SoundWave Speaker',cat:'Audio',price:599,rating:4.6,img:'🔊',desc:'360° spatial, room-filling bass',badge:''},
+  {id:14,name:'FitBand Pro',cat:'Wearables',price:199,rating:4.4,img:'⌚',desc:'AMOLED, swim-proof, 14-day battery',badge:''},
+  {id:15,name:'USB-C Cable Pack',cat:'Accessories',price:49,rating:4.3,img:'🔗',desc:'3-pack braided, 240W, 40Gbps',badge:''},
+  {id:16,name:'StreamDeck Mini',cat:'Gaming',price:129,rating:4.5,img:'🎮'
+
+,desc:'6 LCD keys, customizable macros',badge:''},
+  {id:17,name:'CurveView 27" 4K',cat:'Monitors',price:649,rating:4.6,img:'🖥️',desc:'4K IPS, 99% DCI-P3, USB-C',badge:''},
+  {id:18,name:'FlashCard 1TB',cat:'Storage',price:129,rating:4.4,img:'💾',desc:'MicroSD, A2 V30, waterproof',badge:''},
+  {id:19,name:'ActionCam 360',cat:'Cameras',price:499,rating:4.5,img:'📸',desc:'5.7K 360°, waterproof, stabilized',badge:''},
+  {id:20,name:'ErgoChair Pro',cat:'Accessories',price:899,rating:4.8,img:'🪑',desc:'Mesh, lumbar support, 12yr warranty',badge:'Best'},
+  {id:21,name:'Nova Studio 15"',cat:'Laptops',price:3499,rating:4.9,img:'💻',desc:'For creators, 4K OLED, 128GB RAM',badge:'Pro'},
+  {id:22,name:'Quantum Fold',cat:'Phones',price:1799,rating:4.6,img:'📱',desc:'7.6" foldable, S-Pen, multitask',badge:'New'},
+
+  {id:23,name:'BassX Headphones',cat:'Audio',price:449,rating:4.7,img:'🎧',desc:'Planar magnetic, 100hr battery',badge:''},
+  {id:24,name:'SmartRing V2',cat:'Wearables',price:349,rating:4.3,img:'💍',desc:'Titanium, sleep/health tracking',badge:''},
+  {id:25,name:'Qi3 Wireless Charger',cat:'Accessories',price:79,rating:4.4,img:'🔋',desc:'15W fast, 3-device, minimal design',badge:''},
+  {id:26,name:'VR Headset Nova',cat:'Gaming',price:599,rating:4.6,img:'🥽',desc:'Pancake lens, 4K per eye, wireless',badge:'New'},
+  {id:27,name:'ProDisplay 32" 6K',cat:'Monitors',price:2499,rating:4.9,img:'🖥️',desc:'Mini-LED, P3 wide color, nano-texture',badge:'Pro'},
+  {id:28,name:'Portable SSD 2TB',cat:'Storage',price:199,rating:4.5,img:'💾',desc:'2000MB/s, pocket size, IP68',badge:''},
+
+  {id:29,name:'Drone Nova Air',cat:'Cameras',price:1299,rating:4.7,img:'🚁',desc:'4K/120fps, 45min flight, AI tracking',badge:''},
+  {id:30,name:'Webcam 4K Pro',cat:'Cameras',price:249,rating:4.5,img:'📹',desc:'4K HDR, auto-frame, studio light',badge:''},
+  {id:31,name:'Gaming Laptop Beast',cat:'Laptops',price:2999,rating:4.8,img:'💻',desc:'RTX 5090, 240Hz, liquid metal',badge:'Hot'},
+  {id:32,name:'Quantum Tab Pro',cat:'Phones',price:1099,rating:4.6,img:'📱',desc:'12.9" OLED tablet, stylus included',badge:''},
+  {id:33,name:'DAC/Amp Portable',cat:'Audio',price:199,rating:4.5,img:'🎵',desc:'Hi-Res, balanced output, USB-C',badge:''},
+  {id:34,name:'Smart Glasses AR',cat:'Wearables',price:499,rating:4.2,img:'👓',desc:'Micro-LED display, camera, AI assistant',badge:'Beta'},
+
+  {id:35,name:'Desk Mat XXL',cat:'Accessories',price:59,rating:4.6,img:'🖼️',desc:'900x400mm, stitched edges, RGB border',badge:''},
+  {id:36,name:'Fight Stick Pro',cat:'Gaming',price:299,rating:4.7,img:'🕹️',desc:'Sanwa buttons, aluminum case',badge:''},
+  {id:37,name:'Mini Monitor 15"',cat:'Monitors',price:349,rating:4.4,img:'🖥️',desc:'Portable, OLED, USB-C powered',badge:''},
+  {id:38,name:'NAS 4-Bay',cat:'Storage',price:599,rating:4.6,img:'🗄️',desc:'Quad-core, 8GB RAM, RAID support',badge:''},
+  {id:39,name:'Lens Kit 50mm f/1.2',cat:'Cameras',price:1599,rating:4.8,img:'🔭',desc:'Full-frame, bokeh master, weather-sealed',badge:''},
+  {id:40,name:'Power Bank 25000',cat:'Accessories',price:89,rating:4.5,img:'🔋',desc:'140W output, laptop charging, LED display',badge:''},
+
+  {id:41,name:'Mesh WiFi 7 System',cat:'Accessories',price:699,rating:4.7,img:'📡',desc:'Tri-band, 10Gbps, whole-home',badge:'New'},
+  {id:42,name:'Studio Microphone',cat:'Audio',price:349,rating:4.6,img:'🎤',desc:'Condenser, USB-C, built-in DSP',badge:''},
+];
+
+const faqs = [
+  {q:'What is your return policy?',a:'30-day hassle-free returns on all products. Items must be in original condition.'},
+  {q:'Do you offer international shipping?',a:'Yes! We ship to 50+ countries with tracked delivery.'},
+  {q:'How long does delivery take?',a:'Standard 3-5 days, Express 1-2 days, Same-day in select cities.'},
+  {q:'Is there a warranty?',a:'All products come with minimum 2-year manufacturer warranty.'},
+
+  {q:'Can I cancel my order?',a:'Orders can be cancelled within 1 hour of placement.'},
+  {q:'Do you price match?',a:'Yes, we match any authorized retailer\'s price within 14 days.'},
+];
+
+// ===== STATE =====
+let cart = JSON.parse(localStorage.getItem('nt_cart')||'[]');
+let wishlist = JSON.parse(localStorage.getItem('nt_wish')||'[]');
+let currentPage = 'home';
+let currentCategory = 'All';
+let searchQuery = '';
+let sortBy = 'featured';
+
+// ===== HELPERS =====
+function saveCart(){ localStorage.setItem('nt_cart',JSON.stringify(cart)); updateCounts(); }
+function saveWish(){ 
+
+localStorage.setItem('nt_wish',JSON.stringify(wishlist)); updateCounts(); }
+function updateCounts(){
+  const cc=document.getElementById('cart-count'), wc=document.getElementById('wish-count');
+  const total=cart.reduce((s,i)=>s+i.qty,0);
+  cc.textContent=total; cc.classList.toggle('hidden',total===0);
+  wc.textContent=wishlist.length; wc.classList.toggle('hidden',wishlist.length===0);
+}
+function showToast(msg,type='success'){
+  const t=document.createElement('div');
+  t.className=`toast glass px-4 py-3 rounded-xl flex items-center gap-2 text-sm`;
+  t.innerHTML=`<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" class="w-4 h-4 ${type==='success'?'text-green-400':'text-red-400'}"></i><span>${msg}</span>`;
+  document.getElementById('toast-container').appendChild(t);
+  lucide.createIcons();
+  setTimeout(()=>t.remove(),3000);
+}
+function addToCart(id){
+  const p=products.find(x=>x.id===id);
+  const existing=cart.find(x=>x.id===id);
+  if(existing) existing.qty++;
+  else cart.push({id,name:p.name,price:p.price,img:p.img,qty:1});
+  saveCart(); showToast(`${p.name} added to cart`);
+}
+function removeFromCart(id){ cart=cart.filter(x=>x.id!==id); saveCart(); if(currentPage==='cart') renderPage(); }
+function updateQty(id,delta){
+  const item=cart.find(x=>x.id===id);
+  if(item){ item.qty=Math.max(1,item.qty+delta); saveCart(); if(currentPage==='cart') renderPage(); }
+}
+
+function toggleWish(id){
+  const idx=wishlist.indexOf(id);
+  if(idx>-1){ wishlist.splice(idx,1); showToast('Removed from wishlist'); }
+  else { wishlist.push(id); showToast('Added to wishlist','success'); }
+  saveWish(); if(currentPage==='wishlist'||currentPage==='shop') renderPage();
+}
+
+// ===== NAVIGATION =====
+function navigate(page,data){
+  currentPage=page;
+  window.scrollTo({top:0});
+  renderPage(data);
+}
+
+function renderPage(data){
+  const main=document.getElementById('main-content');
+  switch(currentPage){
+    case 'home': 
+
+main.innerHTML=renderHome(); break;
+    case 'shop': main.innerHTML=renderShop(); break;
+    case 'product': main.innerHTML=renderProduct(data); break;
+    case 'cart': main.innerHTML=renderCart(); break;
+    case 'wishlist': main.innerHTML=renderWishlist(); break;
+    case 'about': main.innerHTML=renderAbout(); break;
+    case 'faq': main.innerHTML=renderFAQ(); break;
+  }
+  lucide.createIcons();
+}
+
+// ===== PAGES =====
+function renderHome(){
+  const featured=products.filter(p=>p.badge).slice(0,8);
+  return `
+  <section class="min-h-[90%] flex items-
+
+center justify-center grid-bg relative px-4">
+    <div class="text-center max-w-4xl animate-fade-up">
+      <p class="text-neon-blue font-semibold text-sm tracking-widest uppercase mb-4">Next Generation Technology</p>
+      <h1 class="font-display font-900 text-5xl md:text-7xl leading-tight mb-6" id="hero-title-el">
+        <span class="gradient-text">${getConfig('hero_title','The Future of Tech')}</span>
+      </h1>
+      <p class="text-lg md:text-xl opacity-70 mb-8 max-w-2xl mx-auto" id="hero-subtitle-el">${getConfig('hero_subtitle','Premium devices for the next generation')}</p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <button onclick="navigate('shop')" class="btn-glow px-8 py-4 bg-gradient-to-r from-neon-blue to-neon-purple rounded-xl font-semibold text-white transition 
+
+hover:scale-105">Explore Products</button>
+        <button onclick="navigate('about')" class="px-8 py-4 glass rounded-xl font-semibold transition hover:scale-105">Learn More</button>
+      </div>
+    </div>
+  </section>
+  <section class="px-4 py-20 max-w-7xl mx-auto">
+    <h2 class="font-display text-3xl font-bold text-center mb-12 animate-fade-up">Featured Products</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      ${featured.map((p,i)=>productCard(p,i)).join('')}
+    </div>
+  </section>
+  <section class="px-4 py-16 max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+
+      ${[{icon:'truck',t:'Free Shipping',d:'On orders over $100'},{icon:'shield',t:'2-Year Warranty',d:'On all products'},{icon:'headphones',t:'24/7 Support',d:'Always here to help'}].map((f,i)=>`
+        <div class="glass rounded-2xl p-8 card-hover animate-fade-up stagger-${i+1}">
+          <i data-lucide="${f.icon}" class="w-10 h-10 mx-auto mb-4 text-neon-blue"></i>
+          <h3 class="font-display font-bold text-lg mb-2">${f.t}</h3>
+          <p class="text-sm opacity-60">${f.d}</p>
+        </div>`).join('')}
+    </div>
+  </section>`;
+}
+
+function productCard(p,i){
+  const inWish=wishlist.includes(p.id);
+  return `<div class="glass rounded-2xl p-5 card-hover animate-fade-up stagger-${(i%4)+1} relative group">
+    ${p.badge?`<span class="absolute top-3 
+
+left-3 px-2 py-0.5 text-[10px] font-bold rounded-full bg-neon-pink text-white">${p.badge}</span>`:''}
+    <button onclick="event.stopPropagation();toggleWish(${p.id})" class="absolute top-3 right-3 p-1.5 rounded-full hover:bg-white/10 transition">
+      <i data-lucide="heart" class="w-4 h-4 ${inWish?'text-neon-pink fill-neon-pink':'opacity-50'}"></i>
+    </button>
+    <div class="text-5xl text-center py-6">${p.img}</div>
+    <h3 class="font-display font-semibold text-sm mb-1 truncate">${p.name}</h3>
+    <p class="text-xs opacity-50 mb-2 truncate">${p.desc}</p>
+    <div class="flex items-center justify-between">
+      <span class="font-bold text-neon-blue">$${p.price}</span>
+      <div class="flex gap-1">
+        <button 
+
+onclick="event.stopPropagation();navigate('product',${p.id})" class="p-2 rounded-lg hover:bg-white/10 transition"><i data-lucide="eye" class="w-4 h-4"></i></button>
+        <button onclick="event.stopPropagation();addToCart(${p.id})" class="p-2 rounded-lg bg-neon-blue/10 hover:bg-neon-blue/20 text-neon-blue transition"><i data-lucide="shopping-cart" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderShop(){
+  let filtered=currentCategory==='All'?products:products.filter(p=>p.cat===currentCategory);
+  if(searchQuery) filtered=filtered.filter(p=>p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  if(sortBy==='price-asc') filtered.sort((a,b)=>a.price-b.price);
+
+  else if(sortBy==='price-desc') filtered.sort((a,b)=>b.price-a.price);
+  else if(sortBy==='rating') filtered.sort((a,b)=>b.rating-a.rating);
+  return `
+  <section class="px-4 py-8 max-w-7xl mx-auto">
+    <h1 class="font-display text-4xl font-bold mb-6 animate-fade-up">Shop</h1>
+    <div class="flex flex-col md:flex-row gap-4 mb-8 animate-fade-up stagger-1">
+      <div class="relative flex-1"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50"></i>
+        <input type="text" placeholder="Search products..." value="${searchQuery}" oninput="searchQuery=this.value;renderPage()" class="w-full pl-10 pr-4 py-3 glass rounded-xl outline-none focus:ring-1 focus:ring-neon-blue text-sm bg-transparent">
+      </div>
+
+      <select onchange="sortBy=this.value;renderPage()" class="glass rounded-xl px-4 py-3 outline-none text-sm bg-transparent">
+        <option value="featured" ${sortBy==='featured'?'selected':''}>Featured</option>
+        <option value="price-asc" ${sortBy==='price-asc'?'selected':''}>Price: Low to High</option>
+        <option value="price-desc" ${sortBy==='price-desc'?'selected':''}>Price: High to Low</option>
+        <option value="rating" ${sortBy==='rating'?'selected':''}>Top Rated</option>
+      </select>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-8 animate-fade-up stagger-2">
+      ${categories.map(c=>`<button onclick="currentCategory='${c}';renderPage()" class="px-4 py-2 rounded-full text-sm transition $
+
+{currentCategory===c?'bg-neon-blue text-dark-900 font-semibold':'glass hover:bg-white/10'}">${c}</button>`).join('')}
+    </div>
+    <p class="text-sm opacity-50 mb-4">${filtered.length} products</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      ${filtered.map((p,i)=>productCard(p,i)).join('')}
+    </div>
+    ${filtered.length===0?'<p class="text-center opacity-50 py-20">No products found.</p>':''}
+  </section>`;
+}
+
+function renderProduct(id){
+  const p=products.find(x=>x.id===id);
+  if(!p) return '<p class="text-center py-20">Product not found</p>';
+  const related=products.filter(x=>x.cat===p.cat&&x.id!==p.id).slice(0,4);
+  return `
+  <section class="px-4 py-8 max-w-5xl mx-auto animate-fade-up">
+    <button onclick="navigate('shop')" class="flex items-center gap-2 text-sm opacity-60 hover:opacity-100 mb-6"><i data-lucide="arrow-left" class="w-4 h-4"></i>Back to Shop</button>
+    <div class="grid md:grid-cols-2 gap-10">
+      <div class="glass rounded-2xl flex items-center justify-center p-12 text-8xl">${p.img}</div>
+      <div>
+        ${p.badge?`<span class="px-3 py-1 text-xs font-bold rounded-full bg-neon-pink/20 text-neon-pink mb-3 inline-block">${p.badge}</span>`:''}
+        <h1 class="font-display text-3xl font-bold mb-2">${p.name}</h1>
+        <p class="opacity-60 mb-4">${p.desc}</p>
+        <div class="flex items-center gap-2 mb-4"><i data-lucide="star" class="w-4 h-4 
+
+text-yellow-400 fill-yellow-400"></i><span class="text-sm">${p.rating}/5</span><span class="text-xs opacity-40">(${Math.floor(Math.random()*500+50)} reviews)</span></div>
+        <p class="text-4xl font-bold gradient-text mb-6">$${p.price}</p>
+        <div class="flex gap-3 flex-wrap">
+          <button onclick="addToCart(${p.id})" class="btn-glow px-8 py-3 bg-gradient-to-r from-neon-blue to-neon-purple rounded-xl font-semibold text-white flex items-center gap-2"><i data-lucide="shopping-cart" class="w-4 h-4"></i>Add to Cart</button>
+          <button onclick="toggleWish(${p.id})" class="px-6 py-3 glass rounded-xl flex items-center gap-2"><i data-lucide="heart" class="w-4 h-4 ${wishlist.includes(p.id)?'text-neon-pink fill-neon-pink':''}"></i>Wishlist</button>
+        </div>
+        <div class="mt-8 space-y-3 text-sm">
+          <div class="flex items-center gap-2 opacity-60"><i data-lucide="truck" 
+
+class="w-4 h-4"></i>Free shipping</div>
+          <div class="flex items-center gap-2 opacity-60"><i data-lucide="shield" class="w-4 h-4"></i>2-year warranty</div>
+          <div class="flex items-center gap-2 opacity-60"><i data-lucide="refresh-cw" class="w-4 h-4"></i>30-day returns</div>
+        </div>
+      </div>
+    </div>
+    ${related.length?`<h2 class="font-display text-2xl font-bold mt-16 mb-6">Related Products</h2><div class="grid grid-cols-2 lg:grid-cols-4 gap-4">${related.map((r,i)=>productCard(r,i)).join('')}</div>`:''}
+  </section>`;
+}
+
+function renderCart(){
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  return `
+
+  <section class="px-4 py-8 max-w-4xl mx-auto animate-fade-up">
+    <h1 class="font-display text-4xl font-bold mb-6">Cart</h1>
+    ${cart.length===0?'<div class="text-center py-20 opacity-50"><p class="text-lg mb-4">Your cart is empty</p><button onclick="navigate(\'shop\')" class="px-6 py-3 bg-neon-blue text-dark-900 rounded-xl font-semibold">Start Shopping</button></div>':`
+    <div class="space-y-4 mb-8">
+      ${cart.map(item=>`
+        <div class="glass rounded-xl p-4 flex items-center gap-4">
+          <span class="text-3xl">${item.img}</span>
+          <div class="flex-1 min-w-0"><h3 class="font-semibold text-sm truncate">${item.name}</h3><p class="text-neon-blue font-bold">$${item.price}</p></div>
+          <div class="flex items-center gap-2">
+            <button onclick="updateQty(${item.id},-1)" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-
+
+sm">-</button>
+            <span class="text-sm w-6 text-center">${item.qty}</span>
+            <button onclick="updateQty(${item.id},1)" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-sm">+</button>
+          </div>
+          <button onclick="removeFromCart(${item.id})" class="p-2 text-red-400 hover:bg-red-400/10 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+        </div>`).join('')}
+    </div>
+    <div class="glass rounded-2xl p-6">
+      <div class="flex justify-between mb-4"><span class="opacity-60">Subtotal</span><span class="font-bold">$${total.toLocaleString()}</span></div>
+      <div class="flex justify-between mb-4"><span class="opacity-60">Shipping</span><span class="font-bold text-
+
+green-400">Free</span></div>
+      <hr class="border-white/10 my-4">
+      <div class="flex justify-between text-xl"><span class="font-bold">Total</span><span class="font-bold gradient-text">$${total.toLocaleString()}</span></div>
+      <button onclick="showToast('This is a demo store!')" class="w-full mt-6 py-4 bg-gradient-to-r from-neon-blue to-neon-purple rounded-xl font-bold text-white btn-glow">Checkout — Demo</button>
+    </div>`}
+  </section>`;
+}
+
+function renderWishlist(){
+  const items=products.filter(p=>wishlist.includes(p.id));
+  return `
+  <section class="px-4 py-8 max-w-7xl mx-auto animate-fade-up">
+    <h1 class="font-display text-4xl font-bold 
+
+mb-6">Wishlist</h1>
+    ${items.length===0?'<p class="text-center py-20 opacity-50">Your wishlist is empty</p>':`
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">${items.map((p,i)=>productCard(p,i)).join('')}</div>`}
+  </section>`;
+}
+
+function renderAbout(){
+  return `<section class="px-4 py-8 max-w-4xl mx-auto animate-fade-up">
+    <h1 class="font-display text-4xl font-bold mb-6 gradient-text">About NovaFlow</h1>
+    <div class="glass rounded-2xl p-8 space-y-4 text-sm leading-relaxed opacity-80">
+      <p>NovaFlow Store is a premium technology destination, curating the finest devices and accessories for enthusiasts and professionals alike.</p>
+      <p>Founded in 2024, we believe 
+
+technology should be beautiful, powerful, and accessible. Every product in our catalog is hand-selected for quality, innovation, and design excellence.</p>
+      <p>Our team of experts tests each product extensively before it earns a place in our collection. We're not just a store — we're a community of tech lovers pushing the boundaries of what's possible.</p>
+    </div>
+  </section>`;
+}
+
+function renderFAQ(){
+  return `<section class="px-4 py-8 max-w-4xl mx-auto animate-fade-up">
+    <h1 class="font-display text-4xl font-bold mb-8">FAQ</h1>
+    <div class="space-y-4">${faqs.map((f,i)=>`
+      <details class="glass rounded-xl group" ${i===0?'open':''}>
+        <summary class="p-5 cursor-pointer font-semibold text-sm flex items-center justify-between"><span>${f.q}</span><i 
+
+data-lucide="chevron-down" class="w-4 h-4 transition group-open:rotate-180"></i></summary>
+        <div class="px-5 pb-5 text-sm opacity-70">${f.a}</div>
+      </details>`).join('')}
+    </div>
+  </section>`;
+}
+
+// ===== THEME =====
+function toggleTheme(){
+  document.documentElement.classList.toggle('dark');
+  localStorage.setItem('nt_theme', document.documentElement.classList.contains('dark')?'dark':'light');
+  lucide.createIcons();
+}
+(function initTheme(){
+  const saved=localStorage.getItem('nt_theme');
+  if(saved==='light') 
+
+document.documentElement.classList.remove('dark');
+})();
+
+// ===== MOBILE MENU =====
+function toggleMobileMenu(){ document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
+// ===== COOKIES =====
+function acceptCookies(){ localStorage.setItem('nt_cookies','1'); document.getElementById('cookie-banner').classList.add('hidden'); }
+function dismissCookies(){ document.getElementById('cookie-banner').classList.add('hidden'); }
+if(!localStorage.getItem('nt_cookies')) document.getElementById('cookie-banner').classList.remove('hidden');
+
+// ===== CHATBOT =====
+let chatOpen=false;
+
+const chatResponses={
+  'shipping':['We offer free shipping on orders over $100! Standard delivery takes 3-5 business days.'],
+  'return':['Our return policy allows 30-day hassle-free returns on all products in original condition.'],
+  'warranty':['All products come with a minimum 2-year manufacturer warranty.'],
+  'payment':['We accept all major credit cards, PayPal, and Apple Pay.'],
+  'hello':['Hey there! 👋 I\'m Nova, your shopping assistant. How can I help you today?'],
+  'hi':['Hello! 👋 Welcome to NovaFlow Store. What can I help you with?'],
+  'help':['I can help with: shipping info, returns, warranties, product recommendations, and more!'],
+  'recommend':['Check out our featured products! The Nova Pro 16" Laptop and Quantum Phone X are bestsellers.'],
+  'default':['I\'m not sure about that. Try asking about shipping, returns, warranties, or product recommendations!']
+};
+function toggleChat(){
+  chatOpen=!chatOpen;
+  const el=document.getElementById('chatbot');
+  el.classList.toggle('hidden',!chatOpen);
+  el.style.display=chatOpen?'flex':'none';
+  if(chatOpen&&document.getElementById('chat-messages').children.length===0){
+    addBotMsg('Hey! 👋 I\'m Nova, your AI assistant. Ask me about products, shipping, returns, or anything else!');
+  }
+}
+function addBotMsg(msg){
+  const d=document.createElement('div');
+  d.className='flex gap-2 animate-fade-in';
+  d.innerHTML=`<div class="w-6 h-6 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center flex-shrink-0 text-[10px]">N</
+
+div><div class="glass rounded-xl rounded-tl-sm px-3 py-2 text-sm max-w-[80%]">${msg}</div>`;
+  document.getElementById('chat-messages').appendChild(d);
+  document.getElementById('chat-messages').scrollTop=9999;
+}
+function sendChat(e){
+  e.preventDefault();
+  const input=document.getElementById('chat-input');
+  const msg=input.value.trim(); if(!msg) return;
+  // user msg
+  const d=document.createElement('div');
+  d.className='flex justify-end animate-fade-in';
+  d.innerHTML=`<div class="bg-neon-blue/20 text-neon-blue rounded-xl rounded-tr-sm px-3 py-2 text-sm max-w-[80%]">${msg}</div>`;
+  document.getElementById('chat-messages').appendChild(d);
+
+  input.value='';
+  // bot reply
+  setTimeout(()=>{
+    const lower=msg.toLowerCase();
+    let reply=chatResponses.default[0];
+    for(const[key,vals] of Object.entries(chatResponses)){
+      if(key!=='default'&&lower.includes(key)){ reply=vals[0]; break; }
+    }
+    addBotMsg(reply);
+  },600);
+}
+
+// ===== MOUSE GLOW =====
+document.addEventListener('mousemove',e=>{
+  const g=document.getElementById('mouse-glow');
+  g.style.left=e.clientX+'px'; g.style.top=e.clientY+'px';
+});
+
+// ===== BG EFFECTS =====
+(function initBG(){
+  // Matrix columns
+  const mc=document.getElementById('matrix-container');
+  const chars='アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789';
+  for(let i=0;i<20;i++){
+    const col=document.createElement('div');
+    col.className='matrix-col';
+    col.style.left=Math.random()*100+'%';
+    col.style.animationDuration=(15+Math.random()*20)+'s';
+    col.style.animationDelay=Math.random()*10+'s';
+    col.style.color=['#00d4ff','#ec4899','#7c3aed'][i%3];
+    let t='';for(let j=0;j<30;j++) t+=chars[Math.floor(Math.random()*chars.length)];
+
+    col.textContent=t;
+    mc.appendChild(col);
+  }
+  // Particles
+  const pc=document.getElementById('particles-container');
+  for(let i=0;i<50;i++){
+    const p=document.createElement('div');
+    p.style.cssText=`position:absolute;width:4px;height:4px;border-radius:50%;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${['#00d4ff','#ec4899','#7c3aed'][i%3]};box-shadow:0 0 6px currentColor;animation:particleFloat ${20+Math.random()*10}s linear infinite;animation-delay:${Math.random()*20}s;opacity:0;`;
+    pc.appendChild(p);
+  }
+})();
+
+
+// ===== CONFIG =====
+const defaultConfig = {
+  store_name: 'NovaFlow Store',
+  hero_title: 'The Future of Tech',
+  hero_subtitle: 'Premium devices for the next generation',
+  background_color: '#0a0a0f',
+  surface_color: '#12121a',
+  text_color: '#ffffff',
+  primary_action_color: '#00d4ff',
+  secondary_action_color: '#7c3aed'
+};
+
+function getConfig(key, fallback){ return (window.elementSdk?.config?.[key]) || fallback; }
+
+function applyConfig(config){
+  document.getElementById('nav-store-name').textContent = config.store_name || defaultConfig.store_name;
+  const heroT = document.getElementById('hero-title-el');
+
+  if(heroT) heroT.innerHTML = `<span class="gradient-text">${config.hero_title || defaultConfig.hero_title}</span>`;
+  const heroS = document.getElementById('hero-subtitle-el');
+  if(heroS) heroS.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+  // colors
+  document.documentElement.style.setProperty('--bg', config.background_color || defaultConfig.background_color);
+  document.documentElement.style.setProperty('--primary', config.primary_action_color || defaultConfig.primary_action_color);
+}
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => { applyConfig(config); },
+  mapToCapabilities: (config) => ({
+
+    recolorables: [
+      { get:()=>config.background_color||defaultConfig.background_color, set:(v)=>{config.background_color=v;window.elementSdk.setConfig({background_color:v});} },
+      { get:()=>config.surface_color||defaultConfig.surface_color, set:(v)=>{config.surface_color=v;window.elementSdk.setConfig({surface_color:v});} },
+      { get:()=>config.text_color||defaultConfig.text_color, set:(v)=>{config.text_color=v;window.elementSdk.setConfig({text_color:v});} },
+      { get:()=>config.primary_action_color||defaultConfig.primary_action_color, set:(v)=>{config.primary_action_color=v;window.elementSdk.setConfig({primary_action_color:v});} },
+      { get:()=>config.secondary_action_color||defaultConfig.secondary_action_color, set:(v)=>{config.secondary_action_color=v;window.elementSdk.setConfig({secondary_action_color:v});} }
+    ],
+    borderables: [],
+    fontEditable: { get:()=>config.font_family||'Outfit', set:(v)=>{config.font_family=v;window.elementSdk.setConfig({font_family:v});} },
+    fontSizeable: { get:()=>config.font_size||16, set:(v)=>{config.font_size=v;window.elementSdk.setConfig({font_size:v});} }
+  }),
+  mapToEditPanelValues: (config) => new Map([
+    ['store_name', config.store_name || defaultConfig.store_name],
+    ['hero_title', config.hero_title || defaultConfig.hero_title],
+    ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle]
+  ])
+});
+
+// Init
+
+updateCounts();
+renderPage();
+lucide.createIcons();
+</script>
+<!--<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f5a203c6650dc9d',t:'MTc3Nzc1NzQxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+--> 
+</html>

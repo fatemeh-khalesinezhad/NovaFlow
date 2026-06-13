@@ -1,0 +1,610 @@
+
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaTech Store</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script>
+tailwind.config={theme:{extend:{fontFamily:{main:['"DM Sans"','system-ui','sans-serif']}}}}
+</script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+
+  <style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow-x:hidden}
+:root{--bg:#0a0a0f;--bg2:#12121a;--surface:#1a1a2e;--surface2:#252540;--text:#f0f0f5;--text2:#a0a0b5;--accent:#6366f1;--accent2:#818cf8;--glow:rgba(99,102,241,0.3);--border:rgba(255,255,255,0.06)}
+[data-theme="light"]{--bg:#f8f9fc;--bg2:#ffffff;--surface:#ffffff;--surface2:#f0f1f5;--text:#1a1a2e;--text2:#6b7280;--accent:#4f46e5;--accent2:#6366f1;--glow:rgba(79,70,229,0.15);--border:rgba(0,0,0,0.08)}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background 0.4s,color 0.4s}
+.glass{background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid var(--border)}
+[data-theme="light"] .glass{background:rgba(255,255,255,0.7)}
+
+.glow-btn{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 4px 20px var(--glow);transition:all 0.3s}
+.glow-btn:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 30px var(--glow)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;transition:all 0.3s;overflow:hidden}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3);border-color:rgba(99,102,241,0.2)}
+[data-theme="light"] .card:hover{box-shadow:0 12px 40px rgba(0,0,0,0.1)}
+.slide-in{transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
+.slide-in.open{transform:translateX(0)}
+.modal-overlay{opacity:0;pointer-events:none;transition:opacity 0.3s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.fade-up{opacity:0;transform:translateY(30px);transition:all 0.6s cubic-bezier(0.4,0,0.2,1)}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+input,textarea{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:12px 16px;outline:none;transition:border-color 0.3s,box-shadow 0.3s;width:100%}
+input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:3px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse-glow{0%,100%
+
+{opacity:0.4}50%{opacity:0.8}}
+.animate-float{animation:float 4s ease-in-out infinite}
+.hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.3;animation:float 6s ease-in-out infinite}
+.category-card{cursor:pointer;padding:24px;border-radius:16px;background:var(--surface);border:1px solid var(--border);text-align:center;transition:all 0.3s}
+.category-card:hover{transform:scale(1.05);border-color:var(--accent);box-shadow:0 0 30px var(--glow)}
+.rating{color:#fbbf24}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;padding:14px 24px;border-radius:12px;transform:translateY(100px);opacity:0;transition:all 0.4s;z-index:9999;font-weight:500}
+.toast.show{transform:translateY(0);opacity:1}
+.chat-bubble{max-width:80%;padding:10px 14px;border-radius:14px;margin-bottom:8px;font-size:14px;line-height:1.4}
+.chat-user{background:var(--accent);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.chat-bot{background:var(--surface2);color:var(--text);border-bottom-left-radius:4px}
+.typing-dot{width:6px;height:6px;background:var(--text2);border-radius:50%;display:inline-block;animation:pulse-glow 1s infinite}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+#bg-canvas{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.5}
+</style>
+
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full" data-theme="dark">
+  <canvas id="bg-canvas"></canvas><!-- HEADER -->
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 glass" style="padding:12px 24px">
+   <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="scrollToSection('hero')">
+     <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;display:flex;align-items:center;justify-content:center">
+
+      <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2">
+       <path d="M9 2L2 6l7 4 7-4-7-4zM2 14l7 4 7-4M2 10l7 4 7-4" />
+      </svg>
+     </div><span id="logo-text" style="font-weight:700;font-size:18px">NovaTech</span>
+    </div>
+    <nav id="desktop-nav" style="display:flex;gap:24px;font-size:14px;font-weight:500" class="hidden md:flex"><a href="#" onclick="scrollToSection('hero');return false" style="color:var(--text2);transition:color 0.3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">Home</a> <a href="#" onclick="scrollToSection('products');return false" style="color:var(--text2);transition:color 0.3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">Products</a> <a href="#" onclick="scrollToSection('blog');return false" style="color:var(--text2);transition:color 0.3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">Blog</a> <a href="#" onclick="scrollToSection('contact');return false" style="color:var(--text2);transition:color 0.3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'">Contact</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px">
+     <div id="search-wrap" style="position:relative"><button onclick="toggleSearch()" style="background:none;border:none;color:var(--text);cursor:pointer;padding:8px"><i data-lucide="search" style="width:20px;height:20px"></i></button>
+      <div id="search-box" style="position:absolute;right:0;top:44px;width:280px;display:none"><input id="search-input" type="text" placeholder="Search products..." oninput="handleSearch()" onkeydown="if(event.key==='Enter')searchEnter()">
+       <div id="search-results" style="position:absolute;top:50px;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;display:none;max-height:240px;overflow-y:auto"></div>
+      </div>
+     </div><button onclick="toggleTheme()" style="background:none;border:none;color:var(--text);cursor:pointer;padding:8px"><i data-lucide="moon" id="theme-icon" style="width:20px;height:20px"></i></button>
+     <div id="user-area"><button onclick="openLogin()" style="background:none;border:none;color:var(--text);cursor:pointer;padding:8px"><i data-lucide="user" style="width:20px;height:20px"></i></button>
+     </div><button onclick="openCart()" style="background:none;border:none;color:var(--text);cursor:pointer;padding:8px;position:relative"> <i data-lucide="shopping-cart" style="width:20px;height:20px"></i> <span id="cart-badge" style="position:absolute;top:2px;right:2px;background:var(--accent);color:#fff;font-size:10px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:600">0</span> </button> <button id="mobile-menu-btn" class="md:hidden" onclick="toggleMobileMenu()" style="background:none;border:none;color:var(--text);cursor:pointer;padding:8px"><i data-lucide="menu" style="width:20px;height:20px"></i></button>
+    </div>
+   </div>
+  </header><!-- MOBILE MENU -->
+  <div id="mobile-menu" style="display:none;position:fixed;top:60px;left:0;right:0;z-index:49;padding:16px" class="glass">
+   <nav style="display:flex;flex-direction:column;gap:12px;font-size:16px"><a href="#" onclick="scrollToSection('hero');toggleMobileMenu();return false" style="color:var(--text);padding:8px 0">Home</a> <a href="#" onclick="scrollToSection('products');toggleMobileMenu();return false" style="color:var(--text);padding:8px 0">Products</a> <a href="#" onclick="scrollToSection('blog');toggleMobileMenu();return false" style="color:var(--text);padding:8px 0">Blog</a> <a href="#" onclick="scrollToSection('contact');toggleMobileMenu();return false" style="color:var(--text);padding:8px 0">Contact</a>
+   </nav>
+  </div>
+  <main id="main-content" style="position:relative;z-index:1"><!-- HERO -->
+   <section id="hero" style="min-height:100%;display:flex;align-items:center;justify-content:center;padding:120px 24px 80px;position:relative;overflow:hidden">
+    <div class="hero-bg">
+     <div class="hero-orb" style="width:400px;height:400px;background:var(--accent);top:-100px;left:-100px"></div>
+     <div class="hero-orb" style="width:300px;height:300px;background:#8b5cf6;bottom:-50px;right:-50px;animation-delay:2s"></div>
+    </div>
+    <div style="text-align:center;max-width:700px;position:relative;z-index:1">
+     <h1 id="hero-title" class="fade-up" style="font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;line-height:1.1;margin-bottom:20px;background:linear-gradient(135deg,var(--text),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Future of Technology</h1>
+     <p id="hero-sub" class="fade-up" style="font-size:clamp(1rem,2vw,1.25rem);color:var(--text2);margin-bottom:36px;animation-delay:0.2s">Discover premium devices crafted for those who demand excellence. Experience innovation at your fingertips.</p><button class="glow-btn fade-up" onclick="scrollToSection('products')" style="padding:14px 36px;border:none;color:#fff;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;animation-delay:0.4s">Explore Products</button>
+    </div>
+
+   </section><!-- CATEGORIES -->
+   <section style="padding:40px 24px 60px;max-width:1280px;margin:0 auto">
+    <h2 class="fade-up" style="font-size:28px;font-weight:700;margin-bottom:32px;text-align:center">Shop by Category</h2>
+    <div id="categories" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px"></div>
+   </section><!-- PRODUCTS -->
+   <section id="products" style="padding:40px 24px 80px;max-width:1280px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin-bottom:32px">
+     <h2 class="fade-up" style="font-size:28px;font-weight:700">All Products</h2>
+     <div style="display:flex;gap:12px;flex-wrap:wrap"><select id="sort-select" onchange="renderProducts()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:14px"> <option value="default">Sort by</option> <option value="price-asc">Price: Low-High</option> <option value="price-desc">Price: High-Low</option> <option value="rating">Top Rated</option> </select>
+     </div>
+    </div>
+    <div id="product-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px"></div>
+   </section><!-- RECENTLY VIEWED -->
+   <section id="recent-section" style="padding:0 24px 60px;max-width:1280px;margin:0 auto;display:none">
+    <h2 class="fade-up" style="font-size:24px;font-weight:700;margin-bottom:24px">Recently Viewed</h2>
+    <div id="recent-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px"></div>
+   </section><!-- BLOG -->
+   <section id="blog" style="padding:60px 24px;max-width:1280px;margin:0 auto">
+    <h2 class="fade-up" style="font-size:28px;font-weight:700;margin-bottom:32px;text-align:center">Tech Insights</h2>
+    <div id="blog-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px"></div>
+   </section><!-- CONTACT -->
+   <section id="contact" style="padding:60px 24px;max-width:600px;margin:0 auto">
+    <h2 class="fade-up" style="font-size:28px;font-weight:700;margin-bottom:32px;text-align:center">Get in Touch</h2>
+    <form id="contact-form" onsubmit="handleContact(event)" class="fade-up" style="display:flex;flex-direction:column;gap:16px"><input type="text" placeholder="Your Name" required> <input type="email" placeholder="Email Address" required> <textarea placeholder="Your Message" rows="4" required style="resize:vertical"></textarea> <button type="submit" class="glow-btn" style="padding:14px;border:none;color:#fff;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer">Send Message</button>
+     <div id="contact-success" style="display:none;text-align:center;color:#10b981;font-weight:500">
+      Message sent successfully! ✨
+     </div>
+    </form>
+   </section>
+  </main><!-- FOOTER -->
+  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:48px 24px 24px;position:relative;z-index:1">
+   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px;margin-bottom:32px">
+    <div>
+     <h3 style="font-weight:700;font-size:18px;margin-bottom:12px" id="footer-brand">NovaTech</h3>
+     <p style="color:var(--text2);font-size:14px;line-height:1.6">Premium technology for the modern world. Innovation meets elegance.</p>
+    </div>
+    <div>
+     <h4 style="font-weight:600;margin-bottom:12px;font-size:14px;color:var(--text2)">Categories</h4>
+     <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--text2)"><span>Laptops</span><span>Phones</span><span>Accessories</span><span>Gaming</span><span>Smart Home</span>
+     </div>
+    </div>
+    <div>
+     <h4 style="font-weight:600;margin-bottom:12px;font-size:14px;color:var(--text2)">Newsletter</h4>
+     <div style="display:flex;gap:8px"><input type="email" placeholder="your@email.com" style="flex:1;padding:10px 14px;font-size:14px"> <button class="glow-btn" style="padding:10px 16px;border:none;color:#fff;border-radius:10px;cursor:pointer;font-size:14px">Join</button>
+     </div>
+    </div>
+   </div>
+   <div style="text-align:center;padding-top:24px;border-top:1px solid var(--border);color:var(--text2);font-size:13px">
+
+    © 2024 NovaTech. All rights reserved.
+   </div>
+  </footer><!-- CART PANEL -->
+  <div id="cart-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;display:none" onclick="closeCart()"></div>
+  <aside id="cart-panel" class="slide-in" style="position:fixed;top:0;right:0;bottom:0;width:min(400px,90%);background:var(--bg2);z-index:100;padding:24px;overflow-y:auto;border-left:1px solid var(--border)">
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+    <h2 style="font-size:20px;font-weight:700">Your Cart</h2><button onclick="closeCart()" style="background:none;border:none;color:var(--text);cursor:pointer"><i data-lucide="x" style="width:24px;height:24px"></i></button>
+   </div>
+
+   <div id="cart-items"></div>
+   <div id="cart-footer" style="display:none;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)">
+    <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;margin-bottom:16px">
+     <span>Total</span><span id="cart-total">$0</span>
+    </div><button class="glow-btn" style="width:100%;padding:14px;border:none;color:#fff;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer">Checkout</button>
+   </div>
+  </aside><!-- LOGIN MODAL -->
+  <div id="login-overlay" class="modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:101;display:flex;align-items:center;justify-content:center;padding:24px">
+
+   <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:36px;width:min(400px,100%);position:relative"><button onclick="closeLogin()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text);cursor:pointer"><i data-lucide="x" style="width:20px;height:20px"></i></button>
+    <h2 id="login-title" style="font-size:24px;font-weight:700;margin-bottom:24px">Welcome Back</h2>
+    <form id="login-form" onsubmit="handleLogin(event)" style="display:flex;flex-direction:column;gap:14px"><input type="text" id="login-name" placeholder="Username" required> <input type="email" id="login-email" placeholder="Email" required> <button type="submit" class="glow-btn" style="padding:14px;border:none;color:#fff;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer">Sign In</button>
+    </form>
+   </div>
+  </div><!-- QUICK VIEW MODAL -->
+  <div id="quickview-overlay" class="modal-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:101;display:flex;align-items:center;justify-content:center;padding:24px">
+   <div id="quickview-content" style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:36px;width:min(500px,100%);max-height:90%;overflow-y:auto;position:relative"></div>
+  </div><!-- CHATBOT --> <button id="chat-toggle" onclick="toggleChat()" style="position:fixed;bottom:24px;right:24px;z-index:90;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;cursor:pointer;box-shadow:0 4px 20px var(--glow);display:flex;align-items:center;justify-content:center;transition:transform 0.3s"> <i data-lucide="message-circle" style="width:24px;height:24px"></i> </button>
+  <div id="chat-panel" style="display:none;position:fixed;bottom:90px;right:24px;z-index:90;width:min(360px,calc(100% - 48px));height:440px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;overflow:hidden;flex-direction:column">
+   <div style="padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+    <div>
+     <strong style="font-size:15px">Nova Assistant</strong><br><span style="font-size:12px;color:var(--text2)">Online • Ready to help</span>
+    </div><button onclick="toggleChat()" style="background:none;border:none;color:var(--text);cursor:pointer"><i data-lucide="x" style="width:18px;height:18px"></i></button>
+   </div>
+   <div id="chat-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column"></div>
+   <div style="padding:12px;border-top:1px solid var(--border)">
+    <div id="quick-replies" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"><button onclick="sendQuick('shipping')" style="font-size:12px;padding:6px 10px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer">Shipping</button> <button onclick="sendQuick('deals')" style="font-size:12px;padding:6px 10px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer">Deals</button> <button onclick="sendQuick('orders')" style="font-size:12px;padding:6px 10px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer">Orders</button>
+    </div>
+    <div style="display:flex;gap:8px"><input id="chat-input" type="text" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1;padding:10px 14px;font-size:14px"> <button onclick="sendChat()" class="glow-btn" style="padding:10px 14px;border:none;color:#fff;border-radius:10px;cursor:pointer"><i data-lucide="send" style="width:16px;height:16px"></i></button>
+    </div>
+   </div>
+
+  </div><!-- TOAST -->
+  <div id="toast" class="toast"></div>
+  <script>
+// ============ DATA ============
+const categories=[
+{name:'Laptops',icon:'laptop'},
+{name:'Phones',icon:'smartphone'},
+{name:'Accessories',icon:'headphones'},
+{name:'Gaming',icon:'gamepad-2'},
+{name:'Smart Home',icon:'home'}
+];
+
+const products=[
+{id:1,name:'ProBook Ultra 16',price:1899,rating:4.9,cat:'Laptops',desc:'16" Retina display, M3 chip, 32GB RAM. The ultimate creative powerhouse.'},
+{id:2,name:'ProBook Air 14',price:1299,rating:4.8,cat:'Laptops',desc:'Ultra-thin design with all-day battery life and stunning display.'},
+{id:3,name:'ProBook Studio',price:2499,rating:4.9,cat:'Laptops',desc:'For professionals who need uncompromising performance.'},
+{id:4,name:'ProBook Mini 13',price:999,rating:4.6,cat:'Laptops',desc:'Compact powerhouse for everyday productivity.'},
+{id:5,name:'ProBook Gaming X',price:2199,rating:4.7,cat:'Laptops',desc:'RTX 4080, 240Hz display. Built for victory.'},
+{id:6,name:'ProBook Flex 360',price:1599,rating:4.5,cat:'Laptops',desc:'2-in-1 convertible with pen support.'},
+{id:7,name:'ProBook Lite',price:799,rating:4.4,cat:'Laptops',desc:'Lightweight and affordable without compromise.'},
+{id:8,name:'ProBook Max 17',price:2799,rating:4.8,cat:'Laptops',desc:'Massive 17" display for immersive work.'},
+{id:9,name:'Nova Phone 15 Pro',price:1199,rating:4.9,cat:'Phones',desc:'Titanium design, 48MP camera system, A18 chip.'},
+{id:10,name:'Nova Phone 15',price:899,rating:4.7,cat:'Phones',desc:'Premium experience at an accessible price.'},
+{id:11,name:'Nova Phone SE',price:499,rating:4.5,cat:'Phones',desc:'Essential features, exceptional value.'},
+{id:12,name:'Nova Phone Ultra',price:1499,rating:4.8,cat:'Phones',desc:'200MP camera, satellite connectivity.'},
+{id:13,name:'Nova Phone Mini',price:699,rating:4.4,cat:'Phones',desc:'Compact flagship in your pocket.'},
+{id:14,name:'Nova Phone Fold',price:1799,rating:4.6,cat:'Phones',desc:'Unfold the future with our foldable display.'},
+{id:15,name:'Nova Phone Plus',price:999,rating:4.7,cat:'Phones',desc:'Bigger display, bigger battery, bigger experience.'},
+{id:16,name:'Nova Phone Lite',price:349,rating:4.3,cat:'Phones',desc:'Smart essentials for everyone.'},
+{id:17,name:'AirPods Nova Pro',price:299,rating:4.8,cat:'Accessories',desc
+
+:'Spatial audio, adaptive noise cancellation.'},
+{id:18,name:'NovaWatch Ultra',price:499,rating:4.7,cat:'Accessories',desc:'Adventure-ready smartwatch with GPS.'},
+{id:19,name:'NovaBuds Fit',price:179,rating:4.5,cat:'Accessories',desc:'Sport earbuds with wing-tip design.'},
+{id:20,name:'Nova Charger 65W',price:59,rating:4.6,cat:'Accessories',desc:'GaN fast charger, 3 ports.'},
+{id:21,name:'Nova Keyboard Pro',price:199,rating:4.7,cat:'Accessories',desc:'Mechanical wireless with RGB.'},
+{id:22,name:'Nova Mouse Ergo',price:89,rating:4.5,cat:'Accessories',desc:'Ergonomic design for all-day comfort.'},
+{id:23,name:'Nova Stand Pro',price:149,rating:4.4,cat:'Accessories',desc:'Adjustable laptop stand, aluminum.'},
+{id:24,name:'Nova Cable Kit',price:39,rating:4.3,cat:'Accessories',desc:'Braided USB-C cables, 3-pack.'},
+{id:25,name:'GameStation 6 Pro',price:599,rating:4.9,cat:'Gaming',desc:'Next-gen gaming console, 8K ready.'},
+{id:26,name:'Nova Controller X',price:79,rating:4.7,cat:'Gaming',desc:'Haptic feedback, adaptive triggers.'},
+{id:27,name:'GameStation VR',price:399,rating:4.6,cat:'Gaming',desc:'Wireless VR headset, 4K per eye.'},
+{id:28,name:'Nova Gaming Chair',price:449,rating:4.5,cat:'Gaming',desc:'Ergonomic with lumbar support and recline.'},
+{id:29,name:'Nova Monitor 27 4K',price:699,rating:4.8,cat:'Gaming',desc:'4K 144Hz gaming monitor, 1ms response.'},
+{id:30,name:'Nova Headset Pro',price:159,rating:4.6,cat:'Gaming',desc:'7.1 surround, noise-canceling mic.'},
+{id:31,name:'Nova Stream Deck',price:129,rating:4.5,cat:'Gaming',desc:'15 customizable LCD keys for streaming.'},
+{id:32,name:'Nova Capture Card',price:179,rating:4.4,cat:'Gaming',desc:'4K60 passthrough, low latency.'},
+{id:33,name:'Nova Hub Max',price:299,rating:4.8,cat:'Smart Home',desc:'Central smart home hub with display.'},
+{id:34,name:'Nova Cam Pro',price:149,rating:4.7,cat:'Smart Home',desc:'2K security camera, night vision.'},
+{id:35,name:'Nova Bulb RGB',price:29,rating:4.5,cat:'Smart Home',desc:'Smart LED bulb, 16M colors.'},
+{id:36,name:'Nova Thermostat',price:199,rating:4.6,cat:'Smart Home',desc:'AI-powered energy saving.'},
+{id:37,name:'Nova Lock Pro',price:249,rating:4.7,cat:'Smart Home',desc:'Fingerprint + app smart lock.'},
+{id:38,name:'Nova Speaker 360',price:179,rating:4.6,cat:'Smart Home',desc:'360° sound, voice assistant built-in.'},
+{id:39,name:'Nova Plug Mini',price:19,rating:4.4,cat:'Smart Home',desc:'Smart plug with energy monitoring.'},
+
+{id:40,name:'Nova Doorbell',price:129,rating:4.5,cat:'Smart Home',desc:'Video doorbell with 2-way talk.'},
+{id:41,name:'Nova Sensor Pack',price:79,rating:4.3,cat:'Smart Home',desc:'Temp, humidity, motion sensors.'},
+{id:42,name:'Nova Router Mesh',price:349,rating:4.8,cat:'Smart Home',desc:'WiFi 7 mesh system, whole home.'}
+];
+
+const blogPosts=[
+{title:'The Future of AI in Consumer Tech',preview:'How artificial intelligence is reshaping the devices we use every day, from smart assistants to predictive computing.', date:'Dec 15, 2024'},
+{title:'Why USB-C Changed Everything',preview:'The universal connector that finally unified our tech ecosystem and what comes next.', date:'Dec 10, 2024'},
+{title:'Building the Perfect Home Office',preview:'Our guide to creating a productive, ergonomic workspace with the right technology stack.', date:'Dec 5, 2024'}
+];
+
+// ============ STATE ============
+let cart=JSON.parse(localStorage.getItem('nt_cart')||'[]');
+let currentCat='All';
+let currentUser=JSON.parse(localStorage.getItem('nt_user')||'null');
+let recentViewed=JSON.parse(localStorage.getItem('nt_recent')||'[]');
+let chatHistory=JSON.parse(localStorage.getItem('nt_chat')||'[]');
+let searchTimeout;
+
+// ============ INIT ============
+function init(){
+
+renderCategories();
+renderProducts();
+renderBlog();
+renderRecent();
+updateCartBadge();
+updateUserArea();
+initObserver();
+initBackground();
+if(chatHistory.length)loadChatHistory();
+}
+
+// ============ BACKGROUND ============
+function initBackground(){
+const c=document.getElementById('bg-canvas');
+const ctx=c.getContext('2d');
+let w,h,particles=[];
+function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+resize();
+window.addEventListener('resize',resize);
+for(let i=0;i<30;i++)particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+1,dx:(Math.random()-0.5)*0.3,dy:(Math.random()-0.5)*0.3});
+function draw(){
+ctx.clearRect(0,0,w,h);
+const isDark=document.body.dataset.theme==='dark';
+ctx.fillStyle=isDark?'rgba(99,102,241,0.3)':'rgba(79,70,229,0.15)';
+particles.forEach(p=>{
+p.x+=p.dx;p.y+=p.dy;
+if(p.x<0||p.x>w)p.dx*=-1;
+if(p.y<0||p.y>h)p.dy*=-1;
+ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+});
+requestAnimationFrame(draw);
+}
+draw();
+}
+
+// ============ THEME ============
+function toggleTheme(){
+const t=document.body.dataset.theme==='dark'?'light':'dark';
+document.body.dataset.theme=t;
+document.getElementById('theme-icon').setAttribute('data-lucide',t==='dark'?'moon':'sun');
+lucide.createIcons();
+}
+
+// ============ CATEGORIES ============
+function renderCategories(){
+const el=document.getElementById('categories');
+el.innerHTML=`<div class="category-card" onclick="filterCat('All')"><i data-lucide="grid" style="width:28px;height:28px;margin:0 auto 8px;display:block;color:var(--accent)"></i><span style="font-size:14px;font-weight:500">All</span></div>`+categories.map(c=>`<div 
+
+class="category-card" onclick="filterCat('${c.name}')"><i data-lucide="${c.icon}" style="width:28px;height:28px;margin:0 auto 8px;display:block;color:var(--accent)"></i><span style="font-size:14px;font-weight:500">${c.name}</span></div>`).join('');
+lucide.createIcons();
+}
+
+function filterCat(cat){currentCat=cat;renderProducts();scrollToSection('products')}
+
+// ============ PRODUCTS ============
+function renderProducts(){
+const sort=document.getElementById('sort-select').value;
+let filtered=currentCat==='All'?[...products]:products.filter(p=>p.cat===currentCat);
+if(sort==='price-asc')filtered.sort((a,b)=>a.price-b.price);
+else if(sort==='price-desc')filtered.sort((a,b)=>b.price-a.price);
+else if(sort==='rating')filtered.sort((a,b)=>b.rating-a.rating);
+document.getElementById('product-grid').innerHTML=filtered.map(p=>`
+<div class="card" style="cursor:pointer" onclick="quickView(${p.id})">
+<div style="height:180px;background:linear-gradient(135deg,var(--surface2),var(--surface));display:flex;align-items:center;justify-content:center">
+<i data-lucide="${p.cat==='Laptops'?'laptop':p.cat==='Phones'?'smartphone':p.cat==='Accessories'?'headphones':p.cat==='Gaming'?'gamepad-2':'home'}" style="width:48px;height:48px;color:var(--accent);opacity:0.7"></i>
+</div>
+<div style="padding:16px">
+<p style="font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px">${p.cat}</p>
+
+<h3 style="font-size:15px;font-weight:600;margin-bottom:6px;line-height:1.3">${p.name}</h3>
+<div style="display:flex;align-items:center;gap:4px;margin-bottom:8px"><span class="rating">★</span><span style="font-size:13px;color:var(--text2)">${p.rating}</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between">
+<span style="font-size:18px;font-weight:700">$${p.price}</span>
+<button onclick="event.stopPropagation();addToCart(${p.id})" class="glow-btn" style="padding:8px 14px;border:none;color:#fff;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Add</button>
+</div>
+</div>
+</div>`).join('');
+lucide.createIcons();
+
+}
+
+// ============ QUICK VIEW ============
+function quickView(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+addRecent(id);
+document.getElementById('quickview-content').innerHTML=`
+<button onclick="closeQuickview()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text);cursor:pointer"><i data-lucide="x" style="width:20px;height:20px"></i></button>
+<div style="height:200px;background:linear-gradient(135deg,var(--surface2),var(--surface));border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px">
+<i data-lucide="${p.cat==='Laptops'?'laptop':p.cat==='Phones'?'smartphone':p.cat==='Accessories'?'headphones':p.cat==='Gaming'?'gamepad-2':'home'}" style="width:64px;height:64px;color:var(--accent)"></i>
+</div>
+<p style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:4px">${p.cat}</p>
+<h2 style="font-size:24px;font-weight:700;margin-bottom:8px">${p.name}</h2>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:12px"><span class="rating">★</span><span style="color:var(--text2)">${p.rating}</span></div>
+<p style="color:var(--text2);line-height:1.6;margin-bottom:24px">${p.desc}</p>
+<div style="display:flex;align-items:center;justify-content:space-between">
+<span style="font-size:28px;font-
+
+weight:700">$${p.price}</span>
+<button onclick="addToCart(${p.id});closeQuickview()" class="glow-btn" style="padding:12px 24px;border:none;color:#fff;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer">Add to Cart</button>
+</div>`;
+document.getElementById('quickview-overlay').classList.add('open');
+lucide.createIcons();
+}
+function closeQuickview(){document.getElementById('quickview-overlay').classList.remove('open')}
+
+// ============ CART ============
+function addToCart(id){
+const existing=cart.find(c=>c.id===id);
+if(existing)existing.qty++;
+else cart.push({id,qty:1});
+saveCart();
+
+showToast('Added to cart! 🛒');
+}
+function removeFromCart(id){cart=cart.filter(c=>c.id!==id);saveCart();renderCart()}
+function updateQty(id,delta){
+const item=cart.find(c=>c.id===id);
+if(item){item.qty+=delta;if(item.qty<1)removeFromCart(id);else{saveCart();renderCart()}}
+}
+function saveCart(){localStorage.setItem('nt_cart',JSON.stringify(cart));updateCartBadge()}
+function updateCartBadge(){
+const count=cart.reduce((s,c)=>s+c.qty,0);
+const badge=document.getElementById('cart-badge');
+badge.style.display=count?'flex':'none';
+badge.textContent=count;
+}
+function openCart(){document.getElementById('cart-overlay').style.display='block';document.getElementById('cart-panel').classList.add('open');renderCart()}
+function closeCart(){document.getElementById('cart-overlay').style.display='none';document.getElementById('cart-panel').classList.remove('open')}
+function renderCart(){
+const el=document.getElementById('cart-items');
+const footer=document.getElementById('cart-footer');
+if(!cart.length){el.innerHTML='<div style="text-align:center;padding:48px 0;color:var(--text2)"><i data-lucide="shopping-bag" style="width:48px;height:48px;margin:0 auto 12px;display:block;opacity:0.5"></i><p>Your cart is empty</p></div>';footer.style.display='none';lucide.createIcons();return}el.innerHTML=cart.map(c=>{const p=products.find(x=>x.id===c.id);return`
+<div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)">
+<div style="width:48px;height:48px;background:var(--surface);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i data-lucide="${p.cat==='Laptops'?'laptop':'smartphone'}" style="width:20px;height:20px;color:var(--accent)"></i></div>
+<div style="flex:1;min-width:0"><p style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</p><p style="font-size:13px;color:var(--text2)">$${p.price}</p></div>
+<div style="display:flex;align-items:center;gap:8px">
+<button onclick="updateQty(${c.id},-1)" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:16px">−</button>
+<span style="font-size:14px;font-weight:600;min-width:20px;text-align:center">${c.qty}</span>
+<button onclick="updateQty(${c.id},1)" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:16px">+</button>
+</div>
+<button onclick="removeFromCart(${c.id})" style="background:none;border:none;color:#ef4444;cursor:pointer"><i data-lucide="trash-2" style="width:16px;height:16px"></i></button>
+</div>`}).join('');
+const total=cart.reduce((s,c)=>{const p=products.find(x=>x.id===c.id);return s+p.price*c.qty},0);
+
+document.getElementById('cart-total').textContent='$'+total.toLocaleString();
+footer.style.display='block';
+lucide.createIcons();
+}
+
+// ============ SEARCH ============
+function toggleSearch(){
+const box=document.getElementById('search-box');
+box.style.display=box.style.display==='none'?'block':'none';
+if(box.style.display==='block')document.getElementById('search-input').focus();
+}
+function handleSearch(){
+clearTimeout(searchTimeout);
+searchTimeout=setTimeout(()=>{
+const q=document.getElementById('search-input').value.toLowerCase().trim();
+const res=document.getElementById('search-results');
+if(!q){res.style.display='none';return}
+const matches=products.filter(p=>p.name.toLowerCase().includes(q)).slice(0,5);
+if(!matches.length){res.innerHTML='<div style="padding:12px;color:var(--text2);font-size:14px">No results found</div>';res.style.display='block';return}
+res.innerHTML=matches.map(p=>`<div style="padding:10px 14px;cursor:pointer;font-size:14px;border-bottom:1px solid var(--border);transition:background 0.2s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''" onclick="quickView(${p.id});toggleSearch()">${p.name} <span style="color:var(--text2)">— $${p.price}</span></div>`).join('');
+res.style.display='block';
+},250);
+}
+
+function searchEnter(){const q=document.getElementById('search-input').value.toLowerCase().trim();if(q){currentCat='All';renderProducts();scrollToSection('products');toggleSearch()}}
+
+// ============ LOGIN ============
+function openLogin(){document.getElementById('login-overlay').classList.add('open')}
+function closeLogin(){document.getElementById('login-overlay').classList.remove('open')}
+function handleLogin(e){
+e.preventDefault();
+const name=document.getElementById('login-name').value;
+const email=document.getElementById('login-email').value;
+currentUser={name,email};
+localStorage.setItem('nt_user',JSON.stringify(
+
+currentUser));
+updateUserArea();closeLogin();showToast(`Welcome, ${name}! 👋`);
+}
+function logout(){currentUser=null;localStorage.removeItem('nt_user');updateUserArea();showToast('Logged out')}
+function updateUserArea(){
+const el=document.getElementById('user-area');
+if(currentUser){el.innerHTML=`<div style="position:relative"><button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;font-weight:700;cursor:pointer;font-size:14px">${currentUser.name[0].toUpperCase()}</button><div style="display:none;position:absolute;right:0;top:40px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px;min-width:160px;z-index:10"><div style="padding:8px 12px;font-size:13px;color:var(--text2);border-bottom:1px solid var(--border);margin-bottom:4px">${currentUser.name}</div><button onclick="showToast('Profile coming soon')" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text);cursor:pointer;font-size:14px;border-radius:6px">Profile</button><button onclick="showToast('Orders coming soon')" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:var(--text);cursor:pointer;font-size:14px;border-radius:6px">Orders</button><button onclick="logout()" style="display:block;width:100%;text-align:left;padding:8px 12px;background:none;border:none;color:#ef4444;cursor:pointer;font-size:14px;border-radius:6px">Logout</button></div></div>`;
+}else{
+el.innerHTML=`<button onclick="openLogin()" style="background:none;border:none;color:var(--text);cursor:pointer;padding:8px"><i data-lucide="user" style="width:20px;height:20px"></i></button>`;
+lucide.createIcons();
+}
+}
+
+// ============ RECENT ============
+function addRecent(id){recentViewed=recentViewed.filter(x=>x!==id);recentViewed.unshift(id);if(recentViewed.length>8)recentViewed.pop();localStorage.setItem('nt_recent',JSON.stringify(recentViewed));renderRecent()}
+
+function renderRecent(){
+const sec=document.getElementById('recent-section');
+if(!recentViewed.length){sec.style.display='none';return}
+sec.style.display='block';
+document.getElementById('recent-grid').innerHTML=recentViewed.map(id=>{const p=products.find(x=>x.id===id);if(!p)return'';return`<div class="card" style="padding:14px;cursor:pointer" onclick="quickView(${p.id})"><p style="font-size:13px;font-weight:600">${p.name}</p><p style="font-size:14px;color:var(--accent);font-weight:700;margin-top:4px">$${p.price}</p></div>`}).join('');
+}
+
+// ============ BLOG ============
+function renderBlog(){
+document.getElementById('blog-grid').innerHTML=blogPosts.map(b=>`
+<div class="card" style="padding:24px">
+
+<div style="height:120px;background:linear-gradient(135deg,var(--surface2),var(--accent));opacity:0.15;border-radius:10px;margin-bottom:16px"></div>
+<p style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:6px">${b.date}</p>
+<h3 style="font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.3">${b.title}</h3>
+<p style="font-size:14px;color:var(--text2);line-height:1.5">${b.preview}</p>
+</div>`).join('');
+}
+
+// ============ CONTACT ============
+function handleContact(e){
+e.preventDefault();
+e.target.reset();
+document.getElementById('contact-success').style.display='block';
+setTimeout(()=>document.getElementById('contact-success').style.display='none',3000);
+
+}
+
+// ============ CHAT ============
+function toggleChat(){
+const p=document.getElementById('chat-panel');
+p.style.display=p.style.display==='flex'?'none':'flex';
+}
+function sendChat(){
+const input=document.getElementById('chat-input');
+const msg=input.value.trim();if(!msg)return;
+input.value='';
+addChatMsg(msg,'user');
+setTimeout(()=>{addChatMsg(getBotReply(msg),'bot')},800);
+}
+function sendQuick(type){
+const msgs={shipping:"What about shipping?",deals:"Any current deals?",orders:"How do I track orders?"};
+const input=document.getElementById('chat-input');
+input.value=msgs[type]||type;
+sendChat();
+}
+function addChatMsg(text,who){
+chatHistory.push({text,who});
+localStorage.setItem('nt_chat',JSON.stringify(chatHistory.slice(-50)));
+const el=document.getElementById('chat-messages');
+const div=document.createElement('div');
+div.className=`chat-bubble chat-${who}`;
+div.textContent=text;
+el.appendChild(div);
+el.scrollTop=el.scrollHeight;
+}
+function loadChatHistory(){
+const el=document.getElementById('chat-messages');chatHistory.forEach(m=>{const div=document.createElement('div');div.className=`chat-bubble chat-${m.who}`;div.textContent=m.text;el.appendChild(div)});
+el.scrollTop=el.scrollHeight;
+}
+function getBotReply(msg){
+const m=msg.toLowerCase();
+if(m.includes('ship'))return'We offer free shipping on orders over $99! Standard delivery takes 3-5 business days. 🚚';
+if(m.includes('deal')||m.includes('discount'))return'Check out our Gaming section — the GameStation 6 Pro is trending! We also have bundle deals on accessories. 🔥';
+if(m.includes('order')||m.includes('track'))return'You can track your order from the Orders section in your profile. Need the tracking number? Just reply with your order ID!';
+if(m.includes('return')||m.includes('refund'))return'We have a 30-day hassle-free return policy. Just contact us and we\'ll sort it out! 📦';
+if(m.includes('laptop'))return'Our ProBook Ultra 16 is our bestseller! Perfect for creative work with its M3 chip and 32GB RAM. Want me to show you more?';
+if(m.includes('phone'))return'The Nova Phone 15 Pro is amazing — titanium design, 48MP camera system. Our most popular phone right now! 📱';
+if(m.includes('hello')||m.includes('hi')||m.includes('hey'))return'Hey there! 👋 How can I help you today? I can help with products, shipping, or deals!';
+if(m.includes('thank'))return'You\'re welcome! Let me know if there\'s anything else I can help with. Happy shopping! ✨';
+return'Great question! I can help with products, shipping info, deals, and returns. What would you like to know more about? 🤔';
+}
+
+// ============ UTILS ============
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function toggleMobileMenu(){const m=document.getElementById('mobile-menu');m.style.display=m.style.display==='none'?'block':'none'}
+
+// ============ SCROLL OBSERVER ============
+function initObserver(){
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+}
+
+// ============ ELEMENT SDK ============
+const defaultConfig={
+
+store_name:'NovaTech',
+hero_headline:'Future of Technology',
+hero_subtext:'Discover premium devices crafted for those who demand excellence. Experience innovation at your fingertips.',
+background_color:'#0a0a0f',
+surface_color:'#1a1a2e',
+text_color:'#f0f0f5',
+accent_color:'#6366f1',
+secondary_action_color:'#818cf8',
+font_family:'DM Sans',
+font_size:16
+};
+
+window.elementSdk.init({
+defaultConfig,
+onConfigChange:async(config)=>{
+document.getElementById('logo-text').textContent=config.store_name||defaultConfig.store_name;
+document.getElementById('footer-brand').textContent=config.store_name||defaultConfig.store_name;
+document.getElementById('hero-title').textContent=config.hero_headline||defaultConfig.hero_headline;
+document.getElementById('hero-sub').textContent=config.hero_subtext||defaultConfig.hero_subtext;
+const font=config.font_family||defaultConfig.font_family;
+document.body.style.fontFamily=`${font}, system-ui, sans-serif`;
+const size=config.font_size||defaultConfig.font_size;
+document.getElementById('hero-title').style.fontSize=`${size*2.8}px`;
+document.getElementById('hero-sub').style.fontSize=`${size*1.1}px`;
+// Colors applied via CSS variables
+const r=document.documentElement;
+r.style.setProperty('--accent',config.accent_color||defaultConfig.accent_color);
+r.style.setProperty('--accent2',config.secondary_action_color||defaultConfig.secondary_action_color);
+r.style.setProperty('--glow',(config.accent_color||defaultConfig.accent_color)+'4d');
+},
+mapToCapabilities:(config)=>({
+recolorables:[
+{get:()=>config.background_color||defaultConfig.background_color,set:v=>{config.background_color=v;window.elementSdk.setConfig({background_color:v})}},
+{get:()=>config.surface_color||defaultConfig.surface_color,set:v=>{config.surface_color=v;window.elementSdk.setConfig({surface_color:v})}},
+{get:()=>config.text_color||defaultConfig.text_color,set:v=>{config.text_color=v;window.elementSdk.setConfig({text_color:v})}},
+{get:()=>config.accent_color||defaultConfig.accent_color,set:v=>{config.accent_color=v;window.elementSdk.setConfig({accent_color:v})}},
+{get:()=>config.secondary_action_color||defaultConfig.secondary_action_color,set:v=>{config.secondary_action_color=v;window.elementSdk.setConfig({secondary_action_color:v})}}
+],
+borderables:[],
+fontEditable:{get:()=>config.font_family||defaultConfig.font_family,set:v=>{config.font_family=v;window.elementSdk.setConfig({font_family:v})}},
+fontSizeable:{get:()=>config.font_size||defaultConfig.font_size,set:v=>{config.font_size=v;window.elementSdk.setConfig({font_size:v})}}
+}),mapToEditPanelValues:(config)=>new Map([
+['store_name',config.store_name||defaultConfig.store_name],
+['hero_headline',config.hero_headline||defaultConfig.hero_headline],
+['hero_subtext',config.hero_subtext||defaultConfig.hero_subtext]
+])
+});
+
+
+// Start
+init();
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f73189473fa66ca',t:'MTc3ODAxOTI0NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

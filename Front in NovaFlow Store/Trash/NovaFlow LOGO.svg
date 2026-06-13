@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 612 792">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: PalatinoLinotype-BoldItalic, 'Palatino Linotype';
+        font-size: 111.7px;
+        font-style: italic;
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-2 {
+        isolation: isolate;
+      }
+
+      .cls-3 {
+        fill: #636363;
+      }
+
+      .cls-4 {
+        fill: #0f0f0f;
+      }
+
+      .cls-5 {
+        fill: #464547;
+      }
+
+      .cls-6 {
+        fill: #b7b7b7;
+      }
+    </style>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.6.0, SVG Export Plug-In . SVG Version: 1.2.0 Build 709)  -->
+  <g>
+    <g id="Layer_1">
+      <g id="Layer_1-2" data-name="Layer_1">
+        <polyline class="cls-6" points="220.2 238.9 327.7 175.6 527.7 291.7 407.4 353.6 220.2 238.9"/>
+        <path class="cls-6" d="M426.8,356.8"/>
+        <g>
+          <polygon class="cls-5" points="85.6 222.9 205.9 161 208.7 295.9 85.6 222.9"/>
+          <polygon class="cls-3" points="208.7 295.9 85.6 355 85.6 222.9 208.7 295.9"/>
+          <polyline class="cls-4" points="208.7 295.9 208.7 295.9 354.8 387.7 225.5 465.3 85.6 355"/>
+        </g>
+        <polygon class="cls-5" points="407.4 353.6 527.7 291.7 530.4 426.6 407.4 353.6"/>
+        <polygon class="cls-3" points="530.4 426.6 407.4 485.7 407.4 353.6 530.4 426.6"/>
+        <g class="cls-2">
+          <text class="cls-1" transform="translate(52.9 613.7)"><tspan x="0" y="0">NovaFlow</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

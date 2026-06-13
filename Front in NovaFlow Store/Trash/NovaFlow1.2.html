@@ -1,0 +1,774 @@
+
+<!doctype html>
+<html lang="en" class="h-full dark">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaTech Store</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&amp;family=DM+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+tailwind.config = {
+
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        neon: { blue: '#00d4ff', purple: '#7c3aed', pink: '#ec4899' },
+        dark: { 900: '#0a0a0f', 800: '#12121a', 700: '#1a1a2e', 600: '#2a2a3e' }
+      },
+      fontFamily: {
+        heading: ['Outfit', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif']
+      }
+    }
+  }
+}
+</script>
+  <style>
+html, body { height: 100%; margin: 0; font-family: 'DM Sans', sans-serif; }
+* { scrollbar-width: thin; scrollbar-color: #7c3aed transparent; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: 
+
+transparent; }
+::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
+
+.gradient-text { background: linear-gradient(135deg, #00d4ff, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+.light .glass { background: rgba(255,255,255,0.7); border: 1px solid rgba(0,0,0,0.08); }
+.glow-blue { box-shadow: 0 0 20px rgba(0,212,255,0.3); }
+.glow-purple { box-shadow: 0 0 20px rgba(124,58,237,0.3); }
+
+@keyframes gradient-shift { 0%,100%{ background-position: 0% 50%; } 50%{ background-position: 100% 50%; } }
+
+@keyframes float1 { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(30px,-20px); } }
+@keyframes float2 { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(-20px,30px); } }
+@keyframes float3 { 0%,100%{ transform: translate(0,0); } 50%{ transform: translate(15px,25px); } }
+@keyframes pulse-glow { 0%,100%{ transform: scale(1); opacity: 0.6; } 50%{ transform: scale(1.3); opacity: 0.2; } }
+@keyframes grid-move { 0%{ transform: translateY(0); } 100%{ transform: translateY(40px); } }
+
+.bg-animated-gradient {
+  background: linear-gradient(270deg, #0a0a2e, #1a0033, #0d001a, #001a2e);
+  background-size: 400% 400%;
+  animation: gradient-shift 30s ease infinite;
+}
+.light .bg-animated-gradient {
+  background: linear-gradient(270deg, 
+
+#f0f4ff, #fdf2f8, #eff6ff, #faf5ff);
+  background-size: 400% 400%;
+}
+
+.orb { position: absolute; border-radius: 50%; filter: blur(80px); mix-blend-mode: screen; pointer-events: none; }
+.light .orb { mix-blend-mode: multiply; opacity: 0.15 !important; }
+.orb-1 { width: 400px; height: 400px; background: radial-gradient(circle, #00d4ff, transparent); top: 10%; left: 10%; opacity: 0.25; animation: float1 25s ease-in-out infinite; }
+.orb-2 { width: 350px; height: 350px; background: radial-gradient(circle, #7c3aed, transparent); top: 50%; right: 10%; opacity: 0.2; animation: float2 30s ease-in-out infinite; }
+.orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, #ec4899, transparent); bottom: 10%; left: 40%; opacity: 0.2; animation: float3 28s ease-in-
+
+out infinite; }
+
+.grid-overlay {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: grid-move 20s linear infinite;
+}
+.light .grid-overlay { display: none; }
+
+#cursor-dot { position: fixed; width: 8px; height: 8px; background: #00d4ff; border-radius: 50%; pointer-events: none; z-index: 99999; transition: transform 0.1s; mix-blend-mode: difference; }
+#cursor-glow { position: fixed; width: 40px; height: 40px; background: radial-gradient(circle, rgba(0,212,255,0.4), transparent); border-radius: 50%; pointer-events: none; z-index: 99998; transition: 
+
+width 0.3s, height 0.3s, opacity 0.3s; }
+
+.card-hover { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
+.card-hover:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 60px rgba(0,212,255,0.15); }
+
+.page-enter { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.btn-primary { background: linear-gradient(135deg, #00d4ff, #7c3aed); transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+.btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,212,255,0.4); }
+
+.star-filled { color: #fbbf24; }
+.star-empty { color: #4b5563; }
+
+.compare-bar { position: fixed; bottom: 0; 
+
+left: 0; right: 0; z-index: 1000; transform: translateY(100%); transition: transform 0.3s ease; }
+.compare-bar.visible { transform: translateY(0); }
+
+input[type="range"] { -webkit-appearance: none; height: 4px; background: linear-gradient(90deg, #00d4ff, #7c3aed); border-radius: 2px; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #00d4ff; border-radius: 50%; cursor: pointer; }
+
+.toast { position: fixed; bottom: 80px; right: 20px; z-index: 10000; transform: translateX(120%); transition: transform 0.3s ease; }
+.toast.show { transform: translateX(0); }
+
+@media (max-width: 768px) {
+  #cursor-dot, #cursor-glow { display: none; }
+
+  .orb { transform: scale(0.5); }
+}
+</style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full overflow-auto bg-dark-900 text-white font-body">
+  <div id="bg-layer" class="fixed inset-0 bg-animated-gradient z-0">
+   <div class="orb orb-1"></div>
+   <div class="orb orb-2"></div>
+   <div class="orb orb-3"></div>
+   <div class="grid-overlay"></div>
+   <canvas id="particles" class="absolute inset-0 pointer-events-none"></canvas>
+  </div>
+  <div id="cursor-dot"></div>
+  <div id="cursor-glow"></div>
+  <div id="app" class="relative z-10 h-full flex flex-col"><!-- Nav -->
+   <nav id="navbar" class="sticky top-0 z-50 
+
+glass px-4 md:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between"><a href="#" onclick="navigate('home')" class="font-heading font-bold text-xl md:text-2xl gradient-text" id="nav-store-name">NovaTech</a>
+     <div class="hidden md:flex items-center gap-6 text-sm font-medium"><a href="#" onclick="navigate('home')" class="hover:text-neon-blue transition">Home</a> <a href="#" onclick="navigate('products')" class="hover:text-neon-blue transition">Products</a> <a href="#" onclick="navigate('blog')" class="hover:text-neon-blue transition">Blog</a> <a href="#" onclick="navigate('about')" class="hover:text-neon-blue transition">About</a> <a href="#" onclick="navigate('contact')" class="hover:text-neon-blue transition">Contact</a> <a href="#" onclick="navigate('faq')" class="hover:text-neon-blue transition">FAQ</a>
+
+     </div>
+     <div class="flex items-center gap-3"><button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-white/10 transition" aria-label="Toggle theme"><i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i><i data-lucide="moon" class="w-5 h-5 dark:hidden"></i></button> <button onclick="navigate('wishlist')" class="p-2 rounded-full hover:bg-white/10 transition relative" aria-label="Wishlist"><i data-lucide="heart" class="w-5 h-5"></i><span id="wishlist-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-neon-pink text-[10px] rounded-full flex items-center justify-center hidden">0</span></button> <button onclick="navigate('cart')" class="p-2 rounded-full hover:bg-white/10 transition relative" aria-label="Cart"><i data-lucide="shopping-cart" class="w-5 h-5"></i><span id="cart-badge" class="absolute -top-1 -right-1 w-4 h-4 bg-neon-blue text-[10px] text-black rounded-full flex items-center justify-center hidden">0</span></button> <button 
+
+onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-full hover:bg-white/10 transition" aria-label="Menu"><i data-lucide="menu" class="w-5 h-5"></i></button>
+     </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden mt-3 pb-2 border-t border-white/10 pt-3 flex flex-col gap-2 text-sm"><a href="#" onclick="navigate('home');toggleMobileMenu()" class="py-2 px-3 rounded hover:bg-white/10">Home</a> <a href="#" onclick="navigate('products');toggleMobileMenu()" class="py-2 px-3 rounded hover:bg-white/10">Products</a> <a href="#" onclick="navigate('blog');toggleMobileMenu()" class="py-2 px-3 rounded hover:bg-white/10">Blog</a> <a href="#" onclick="navigate('about');toggleMobileMenu()" class="py-2 px-3 rounded hover:bg-white/10">About</a> <a href="#" 
+
+onclick="navigate('contact');toggleMobileMenu()" class="py-2 px-3 rounded hover:bg-white/10">Contact</a> <a href="#" onclick="navigate('faq');toggleMobileMenu()" class="py-2 px-3 rounded hover:bg-white/10">FAQ</a>
+    </div>
+   </nav><!-- Main Content -->
+   <main id="main-content" class="flex-1"></main><!-- Compare Bar -->
+   <div id="compare-bar" class="compare-bar glass px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+     <div id="compare-items" class="flex gap-3 overflow-x-auto"></div>
+     <div class="flex gap-2 shrink-0 ml-3"><button onclick="showCompare()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">Compare</button> <button onclick="clearCompare()" class="px-4 py-2 rounded-lg text-sm border border-white/20 hover:bg-white/10 transition">Clear</button>
+
+     </div>
+    </div>
+   </div><!-- Toast -->
+   <div id="toast" class="toast glass px-4 py-3 rounded-lg text-sm font-medium"></div>
+  </div>
+  <script>
+// ===== STATE =====
+let state = {
+  page: 'home',
+  cart: JSON.parse(localStorage.getItem('nt_cart') || '[]'),
+  wishlist: JSON.parse(localStorage.getItem('nt_wish') || '[]'),
+  compare: [],
+  filters: { category: 'all', minPrice: 0, maxPrice: 5000, rating: 0, sort: 'name-asc', search: '' },
+  darkMode: true
+};
+
+
+// ===== PRODUCTS (40+) =====
+const products = [
+  { id:1, name:'Nova Pro 16"', cat:'laptops', price:2499, rating:4.9, reviews:342, emoji:'💻', desc:'Ultimate performance laptop with M3 chip', specs:{CPU:'M3 Ultra',RAM:'64GB',Storage:'2TB SSD',Display:'16" Retina XDR'} },
+  { id:2, name:'Nova Air 14"', cat:'laptops', price:1599, rating:4.7, reviews:521, emoji:'💻', desc:'Thin & light with all-day battery', specs:{CPU:'M3 Pro',RAM:'32GB',Storage:'1TB SSD',Display:'14" Liquid Retina'} },
+  { id:3, name:'Nova Book 13"', cat:'laptops', price:999, rating:4.5, reviews:892, emoji:'💻', desc:'Perfect everyday laptop', specs:{CPU:'M3',RAM:'16GB',Storage:'512GB SSD',Display:'13.6" Retina'} },
+  { id:4, name:'Nova Studio 15"', cat:'laptops', price:3299, rating:4.8, reviews:156, emoji:'💻', desc:'Creative workstation powerhouse', specs:{CPU:'M3 Max',RAM:'128GB',Storage:'4TB SSD',Display:'15.3" XDR'} },
+  { id:5, name:'Nova Flex 360', cat:'laptops', price:1299, rating:4.4, reviews:267, emoji:'💻', desc:'Convertible 2-in-1 laptop', specs:{CPU:'Intel i7',RAM:'16GB',Storage:'512GB',Display:'14" Touch OLED'} },
+  { id:6, name:'Nova Edge', cat:'laptops', price:1899, rating:4.6, reviews:178, emoji:'💻', desc:'Gaming-ready thin laptop', specs:{CPU:'AMD R9',RAM:'32GB',Storage:'1TB',Display:'15.6" 240Hz'} },
+  { id:7, name:'Nova Chromebook', cat:'laptops', price:449, rating:4.2, reviews:1205, emoji:'💻', desc:'Cloud-first lightweight laptop', specs:{CPU:'MediaTek',RAM:'8GB',Storage:'128GB',Display:'14" FHD'} },
+  { id:8, name:'Nova Ultra 17"', cat:'laptops', price:3999, rating:5.0, reviews:89, emoji:'💻', desc:'No-compromise desktop replacement', specs:{CPU:'M3 Ultra',RAM:'192GB',Storage:'8TB SSD',Display:'17" XDR'} },
+  { id:9, name:'Pulse X Pro', cat:'smartphones', price:1199, rating:4.8, reviews:2341, emoji:'📱', desc:'Flagship with revolutionary camera', specs:{Chip:'A18 Pro',RAM:'12GB',Storage:'256GB',Camera:'48MP Triple'} },
+  { id:10, name:'Pulse X', cat:'smartphones', price:999, rating:4.7, reviews:3102, emoji:'📱', desc:'Premium experience for everyone', specs:{Chip:'A18',RAM:'8GB',Storage:'128GB',Camera:'48MP Dual'} },
+  { id:11, name:'Pulse Lite', cat:'smartphones', price:599, rating:4.5, reviews:4521, emoji:'📱', desc:'Essential features, amazing value', specs:{Chip:'A17',RAM:'6GB',Storage:'128GB',Camera:'12MP Dual'} },
+  { id:12, name:'Pulse Ultra', cat:'smartphones', price:1499, rating:4.9, reviews:876, emoji:'📱', desc:'Titanium build, AI-powered', specs:{Chip:'A18 Ultra',RAM:'16GB',Storage:'1TB',Camera:'200MP Quad'} },
+  { id:13, name:'Pulse Fold', cat:'smartphones', price:1799, rating:4.6, reviews:423, emoji:'📱', desc:'Foldable future in your pocket', specs:{Chip:'A18 Pro',RAM:'12GB',Storage:'512GB',Display:'7.6" Fold'} },
+  { id:14, name:'Pulse Mini', cat:'smartphones', price:799, rating:4.4, reviews:1876, emoji:'📱', desc:'Compact powerhouse', specs:{Chip:'A18',RAM:'8GB',Storage:'256GB',Display:'5.4" OLED'} },
+  { id:15, name:'Pulse SE', cat:'smartphones', price:429, rating:4.3, reviews:5621, emoji:'📱', desc:'Affordable flagship experience', specs:{Chip:'A16',RAM:'6GB',Storage:'64GB',Camera:'12MP'} },
+  { id:16, name:'Pulse Gaming', cat:'smartphones', price:899, rating:4.5, reviews:982, emoji:'📱', desc:'Built for mobile gaming', specs:{Chip:'SD 8 Gen 3',RAM:'16GB',Storage:'512GB',Display:'6.8" 165Hz'} },
+
+  { id:17, name:'AeroBeats Pro', cat:'headphones', price:349, rating:4.8, reviews:4231, emoji:'🎧', desc:'Studio-quality noise cancellation', specs:{Driver:'40mm',ANC:'Adaptive',Battery:'30hrs',Connectivity:'BT 5.3'} },
+  { id:18, name:'AeroBeats Max', cat:'headphones', price:549, rating:4.9, reviews:1234, emoji:'🎧', desc:'Premium over-ear audiophile grade', specs:{Driver:'50mm Planar',ANC:'Ultra',Battery:'40hrs',Material:'Titanium'} },
+  { id:19, name:'AeroBuds Pro', cat:'headphones', price:249, rating:4.7, reviews:6789, emoji:'🎧', desc:'Perfect fit wireless earbuds', specs:{Driver:'11mm',ANC:'Active',Battery:'8hrs+24',Water:'IPX5'} },
+  { id:20, name:'AeroBuds Lite', cat:'headphones', price:129, rating:4.4, reviews:9821, emoji:'🎧', desc:'Essential wireless audio', specs:{Driver:'8mm',ANC:'None',Battery:'6hrs+18',Water:'IPX4'} },
+  { id:21, name:'AeroBeats Sport', cat:'headphones', price:199, rating:4.5, reviews:3421, emoji:'🎧', desc:'Workout-ready secure fit', specs:{Driver:'12mm',ANC:'Transparency',Battery:'10hrs',Water:'IP68'} },
+  { id:22, name:'AeroBeats Studio', cat:'headphones', price:449, rating:4.8, reviews:876, emoji:'🎧', desc:'Reference monitor headphones', specs:{Driver:'45mm',Response:'5Hz-50kHz',Impedance:'64Ω',Cable:'Detachable'} },
+  { id:23, name:'AeroBuds Sleep', cat:'headphones', price:179, rating:4.3, reviews:2345, emoji:'🎧', desc:'Designed for sleep comfort', specs:{Driver:'6mm',Profile:'Ultra-low',Battery:'10hrs',Features:'White noise'} },
+  { id:24, name:'AeroBeats Kids', cat:'headphones', price:79, rating:4.6, reviews:4567, emoji:'🎧', desc:'Volume-limited for young ears', specs:{Driver:'30mm',Limit:'85dB',Battery:'20hrs',Material:'BPA-free'} },
+  { id:25, name:'MagCharge Pad', cat:'accessories', price:49, rating:4.5, reviews:3456, emoji:'🔌', desc:'15W fast wireless charger', specs:{Power:'15W',Coil:'Triple',Material:'Aluminum',LED:'Status ring'} },
+  { id:26, name:'PowerVault 20K', cat:'accessories', price:89, rating:4.7, reviews:2341, emoji:'🔋', desc:'20000mAh portable power', specs:{Capacity:'20000mAh',Output:'100W PD',Ports:'USB-C x2',Weight:'350g'} },
+  { id:27, name:'NovaWatch Ultra', cat:'accessories', price:799, rating:4.8, reviews:1234, emoji:'⌚', desc:'Titanium smartwatch', specs:{Display:'49mm OLED',Battery:'72hrs',Water:'100m',Sensors:'SpO2, ECG'} },
+  { id:28, name:'NovaWatch SE', cat:'accessories', price:249, rating:4.4, reviews:5678, emoji:'⌚', desc:'Essential health tracking', specs:{Display:'41mm LCD',Battery:'18hrs',Water:'50m',Sensors:'Heart rate'} },
+  { id:29, name:'ProStand Desk', cat:'accessories', price:179, rating:4.6, reviews:892, emoji:'🖥️', desc:'Adjustable laptop stand', specs:{Material:'Aluminum',Adjust:'5 angles',Weight:'1.2kg',Fits:'up to 17"'} },
+  { id:30, name:'NovaPen Pro', cat:'accessories', price:129, rating:4.7, reviews:2341, emoji:'✏️', desc:'Precision stylus with pressure', specs:{Levels:'4096',Latency:'9ms',Battery:'12hrs',Tips:'Replaceable'} },
+  { id:31, name:'AirTag Ultra', cat:'accessories', price:39, rating:4.3, reviews:8901, emoji:'📍', desc:'Precision item finder', specs:{Range:'120m',Battery:'2yr',Water:'IP67',Network:'UWB + BT'} },
+  { id:32, name:'NovaHub 7-in-1', cat:'accessories', price:69, rating:4.5, reviews:3421, emoji:'🔗', desc:'USB-C multiport hub', specs:{Ports:'HDMI,SD,USB-A x3,USB-C',Power:'100W pass',Speed:'10Gbps',Build:'Aluminum'} },
+  { id:33, name:'ClearCase Pro', cat:'accessories', price:59, rating:4.4, reviews:6543, emoji:'📱', desc:'MagSafe clear armor case', specs:{Material:'Polycarbonate',Drop:'3m rated',MagSafe:'Yes',Weight:'28g'} },
+  { id:34, name:'NovaKeys Mech', cat:'accessories', price:199, rating:4.8, reviews:1567, emoji:'⌨️', desc:'Wireless mechanical keyboard', specs:{Switches:'Gateron Pro',Layout:'75%',Battery:'200hrs',Backlight:'RGB'} },
+  { id:35, name:'NovaMouse Pro', cat:'accessories', price:99, rating:4.6, reviews:2890, emoji:'🖱️', desc:'Ergonomic precision mouse', specs:{DPI:'25600',Buttons:8,Battery:'70hrs',Weight:'63g'} },
+  { id:36, name:'NovaScreen 4K', cat:'accessories', price:599, rating:4.7, reviews:734, emoji:'🖥️', desc:'27" 4K USB-C monitor', specs:
+
+{Panel:'IPS',Resolution:'3840x2160',Refresh:'144Hz',HDR:'HDR600'} },
+  { id:37, name:'PowerVault Mini', cat:'accessories', price:39, rating:4.3, reviews:7654, emoji:'🔋', desc:'5000mAh pocket charger', specs:{Capacity:'5000mAh',Output:'20W PD',Ports:'USB-C',Weight:'110g'} },
+  { id:38, name:'NovaCam 360', cat:'accessories', price:349, rating:4.5, reviews:567, emoji:'📷', desc:'360° action camera', specs:{Resolution:'5.7K',Stabilization:'FlowState',Water:'10m',Weight:'180g'} },
+  { id:39, name:'SoundBar Nova', cat:'accessories', price:299, rating:4.6, reviews:1234, emoji:'🔊', desc:'Spatial audio soundbar', specs:{Drivers:'9-speaker',Dolby:'Atmos',Power:'250W',Sub:'Wireless'} },
+  { id:40, name:'NovaTag Wallet', cat:'accessories', price:29, rating:4.2, reviews:4321, emoji:'💳', desc:'Card-thin tracker', specs:{Thickness:'1.8mm',Battery:'3yr',Speaker:'Built-in',Find:'Precision'} },
+  { id:41, name:'Nova Dock Pro', cat:'accessories', price:249, rating:4.7, reviews:456, emoji:'🔌', desc:'Thunderbolt 4 dock station', specs:{Ports:'12 total',Display:'Dual 4K',Power:'96W PD',Speed:'40Gbps'} },
+  { id:42, name:'AeroBeats Open', cat:'headphones', price:299, rating:4.6, reviews:1023, emoji:'🎧', desc:'Open-ear spatial audio', specs:{Driver:'14mm',Design:'Open',Battery:'8hrs',Audio:'Spatial'} }
+];
+
+const blogPosts = [
+  { id:1, title:'The Future of AI in Consumer Tech', date:'Dec 15, 2024', excerpt:'How artificial intelligence is reshaping every device we use.', emoji:'🤖' },
+  { id:2, title:'Why USB-C Changed Everything', date:'Nov 28, 2024', excerpt:'The universal connector revolution and what comes next.', emoji:'🔌' },
+  { id:3, title:'Top 10 Productivity Setups for 2025', date:'Nov 10, 2024', excerpt:'Curated workstation configurations for maximum output.', emoji:'🖥️' },
+  { id:4, title:'Spatial Audio: Beyond Headphones', date:'Oct 22, 2024', excerpt:'How 3D sound is transforming entertainment and work.', emoji:'🎵' }
+];
+
+// ===== HELPERS =====
+function saveState() {
+  localStorage.setItem('nt_cart', JSON.stringify(state.cart));
+  localStorage.setItem('nt_wish', JSON.stringify(state.wishlist));
+  updateBadges();
+}
+
+function updateBadges() {
+  const cb = document.getElementById('cart-badge');
+  const wb = document.getElementById('wishlist-badge');
+  const cartCount = state.cart.reduce((s,i)=>s+i.qty, 0);
+  cb.textContent = cartCount; cb.classList.toggle('hidden', cartCount===0);
+  wb.textContent = state.wishlist.length; wb.classList.toggle('hidden', state.wishlist.length===0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function stars(rating) {
+  let h='';
+  for(let i=1;i<=5;i++) h+=`<i data-lucide="star" class="w-4 h-4 inline ${i<=Math.round(rating)?'star-filled fill-current':'star-empty'}"></i>`;
+  return h;
+}
+
+function addToCart(id) {
+  const existing = state.cart.find(i=>i.id===id);
+  if(existing) existing.qty++;
+  else state.cart.push({id, qty:1});
+  saveState(); showToast('Added to cart ✓');
+}
+
+function toggleWishlist(id) {
+  const idx = state.wishlist.indexOf(id);
+  if(idx>-1) { state.wishlist.splice(idx,1); showToast('Removed from wishlist'); }
+  else { state.wishlist.push(id); showToast('Added to wishlist ♥'); }
+  saveState(); renderPage();
+}
+
+function toggleCompare(id) {
+  const idx = state.compare.indexOf(id);
+  if(idx>-1) state.compare.splice(idx,1);
+
+  else if(state.compare.length<3) state.compare.push(id);
+  else { showToast('Max 3 items to compare'); return; }
+  updateCompareBar();
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compare-bar');
+  const container = document.getElementById('compare-items');
+  if(state.compare.length===0) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  container.innerHTML = state.compare.map(id=>{
+    const p = products.find(x=>x.id===id);
+    return `<div class="glass px-3 py-1 rounded-full text-xs flex items-center gap-2">${p.emoji} ${p.name} <button onclick="toggleCompare(${id})" class="text-red-400">×</button></div>`;
+  }).join('');
+
+  lucide.createIcons();
+}
+
+function clearCompare() { state.compare=[]; updateCompareBar(); }
+
+function showCompare() {
+  if(state.compare.length<2) { showToast('Add at least 2 items'); return; }
+  navigate('compare');
+}
+
+// ===== NAVIGATION =====
+function navigate(page, data) {
+  state.page = page; state.pageData = data;
+  renderPage();
+  document.getElementById('main-content').scrollIntoView({behavior:'smooth'});
+}
+
+function toggleTheme() {
+  state.darkMode = !state.darkMode;
+  
+
+document.documentElement.classList.toggle('dark', state.darkMode);
+  document.documentElement.classList.toggle('light', !state.darkMode);
+  document.body.classList.toggle('bg-dark-900', state.darkMode);
+  document.body.classList.toggle('text-white', state.darkMode);
+  document.body.classList.toggle('bg-gray-50', !state.darkMode);
+  document.body.classList.toggle('text-gray-900', !state.darkMode);
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('hidden');
+}
+
+// ===== RENDER =====
+function renderPage() {
+  const main = document.getElementById('main-content');
+
+  switch(state.page) {
+    case 'home': main.innerHTML = renderHome(); break;
+    case 'products': main.innerHTML = renderProducts(); break;
+    case 'product': main.innerHTML = renderProductDetail(); break;
+    case 'cart': main.innerHTML = renderCart(); break;
+    case 'wishlist': main.innerHTML = renderWishlist(); break;
+    case 'checkout': main.innerHTML = renderCheckout(); break;
+    case 'blog': main.innerHTML = renderBlog(); break;
+    case 'about': main.innerHTML = renderAbout(); break;
+    case 'contact': main.innerHTML = renderContact(); break;
+    case 'faq': main.innerHTML = renderFAQ(); break;
+    case 'compare': main.innerHTML = renderCompare(); break;
+    default: main.innerHTML = renderHome();
+
+  }
+  main.classList.add('page-enter');
+  setTimeout(()=>main.classList.remove('page-enter'),300);
+  lucide.createIcons();
+}
+
+function renderHome() {
+  const featured = products.filter(p=>p.rating>=4.7).slice(0,8);
+  return `
+  <section class="relative py-20 md:py-32 px-4 text-center overflow-hidden">
+    <div class="max-w-4xl mx-auto relative z-10">
+      <h1 class="font-heading font-900 text-5xl md:text-7xl lg:text-8xl gradient-text leading-tight mb-6" id="hero-headline">${window.elementSdk?.config?.hero_headline||'Future of Tech'}</h1>
+      <p class="text-lg md:text-xl opacity-70 max-w-2xl mx-auto mb-10" id="hero-
+
+subtext">${window.elementSdk?.config?.hero_subtext||'Discover next-generation devices crafted for tomorrow. Premium quality meets cutting-edge innovation.'}</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button onclick="navigate('products')" class="btn-primary px-8 py-4 rounded-xl font-heading font-semibold text-lg">Shop Now</button>
+        <button onclick="navigate('about')" class="px-8 py-4 rounded-xl font-heading font-semibold text-lg border border-white/20 hover:bg-white/10 transition">Learn More</button>
+      </div>
+    </div>
+  </section>
+  <section class="px-4 pb-20">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="font-heading font-bold text-3xl md:text-4xl mb-2 text-center">Featured Products</h2>
+
+      <p class="text-center opacity-60 mb-10">Handpicked for excellence</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        ${featured.map(p=>productCard(p)).join('')}
+      </div>
+    </div>
+  </section>
+  <section class="px-4 pb-20">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass rounded-2xl p-8 text-center card-hover"><div class="text-4xl mb-4">🚀</div><h3 class="font-heading font-bold text-xl mb-2">Free Shipping</h3><p class="opacity-60 text-sm">On all orders over $99</p></div>
+      <div class="glass rounded-2xl p-8 text-center card-hover"><div class="text-4xl mb-4">🛡️</div><h3 class="font-heading font-bold text-xl mb-2">2-Year Warranty</h3><p class="opacity-60 text-sm">Full 
+
+coverage guaranteed</p></div>
+      <div class="glass rounded-2xl p-8 text-center card-hover"><div class="text-4xl mb-4">↩️</div><h3 class="font-heading font-bold text-xl mb-2">Easy Returns</h3><p class="opacity-60 text-sm">30-day hassle-free returns</p></div>
+    </div>
+  </section>`;
+}
+
+function productCard(p) {
+  const inWish = state.wishlist.includes(p.id);
+  return `<div class="glass rounded-2xl p-5 card-hover relative group">
+    <button onclick="event.stopPropagation();toggleWishlist(${p.id})" class="absolute top-4 right-4 p-1.5 rounded-full hover:bg-white/10 transition z-10">
+      <i data-lucide="heart" class="w-4 h-4 ${inWish?'text-neon-pink fill-current':'opacity-50'}"></i>
+    </button>
+
+    <div onclick="navigate('product',${p.id})" class="cursor-pointer">
+      <div class="text-5xl text-center py-6">${p.emoji}</div>
+      <h3 class="font-heading font-semibold text-sm mb-1 truncate">${p.name}</h3>
+      <div class="flex items-center gap-1 mb-2">${stars(p.rating)}<span class="text-xs opacity-50 ml-1">(${p.reviews})</span></div>
+      <div class="flex items-center justify-between">
+        <span class="font-heading font-bold text-lg gradient-text">$${p.price.toLocaleString()}</span>
+        <button onclick="event.stopPropagation();addToCart(${p.id})" class="p-2 rounded-lg bg-neon-blue/20 hover:bg-neon-blue/40 transition text-neon-blue"><i data-lucide="plus" class="w-4 h-4"></i></button>
+      </div>
+    </div>
+
+    <button onclick="event.stopPropagation();toggleCompare(${p.id})" class="mt-2 w-full text-xs py-1.5 rounded border border-white/10 hover:bg-white/10 transition ${state.compare.includes(p.id)?'border-neon-purple text-neon-purple':'opacity-50'}">
+      ${state.compare.includes(p.id)?'✓ Comparing':'+ Compare'}
+    </button>
+  </div>`;
+}
+
+function renderProducts() {
+  let filtered = [...products];
+  const f = state.filters;
+  if(f.category!=='all') filtered = filtered.filter(p=>p.cat===f.category);
+  if(f.search) filtered = filtered.filter(p=>p.name.toLowerCase().includes(f.search.toLowerCase()));
+  filtered = filtered.filter(p=>p.price>=f.minPrice && p.price<=f.maxPrice);
+
+  if(f.rating>0) filtered = filtered.filter(p=>p.rating>=f.rating);
+  switch(f.sort) {
+    case 'price-asc': filtered.sort((a,b)=>a.price-b.price); break;
+    case 'price-desc': filtered.sort((a,b)=>b.price-a.price); break;
+    case 'rating': filtered.sort((a,b)=>b.rating-a.rating); break;
+    default: filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  }
+  return `<section class="px-4 py-10">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="font-heading font-bold text-3xl md:text-4xl mb-8">All Products</h1>
+      <div class="flex flex-col lg:flex-row gap-6">
+        <aside class="lg:w-64 shrink-0">
+          <div class="glass rounded-2xl p-5 space-y-5 sticky top-20">
+            <div><label class="text-xs font-
+
+medium opacity-60 block mb-2">Search</label><input type="text" value="${f.search}" oninput="state.filters.search=this.value;renderPage()" placeholder="Search..." class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-neon-blue"></div>
+            <div><label class="text-xs font-medium opacity-60 block mb-2">Category</label>
+              <select onchange="state.filters.category=this.value;renderPage()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none">
+                <option value="all" ${f.category==='all'?'selected':''}>All</option>
+                <option value="laptops" ${f.category==='laptops'?'selected':''}>Laptops</option>
+                <option value="smartphones" ${f.category==='smartphones'?'selected':''}>Smartphones</option>
+
+                <option value="headphones" ${f.category==='headphones'?'selected':''}>Headphones</option>
+                <option value="accessories" ${f.category==='accessories'?'selected':''}>Accessories</option>
+              </select>
+            </div>
+            <div><label class="text-xs font-medium opacity-60 block mb-2">Max Price: $${f.maxPrice}</label><input type="range" min="0" max="5000" step="50" value="${f.maxPrice}" oninput="state.filters.maxPrice=+this.value;renderPage()" class="w-full"></div>
+            <div><label class="text-xs font-medium opacity-60 block mb-2">Min Rating: ${f.rating}★</label><input type="range" min="0" max="5" step="0.5" value="${f.rating}" oninput="state.filters.rating=+this.value;renderPage()" class="w-full"></div>
+            <div><label class="text-xs font-medium opacity-60 block mb-2">Sort</
+
+label>
+              <select onchange="state.filters.sort=this.value;renderPage()" class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none">
+                <option value="name-asc" ${f.sort==='name-asc'?'selected':''}>Name A-Z</option>
+                <option value="price-asc" ${f.sort==='price-asc'?'selected':''}>Price Low-High</option>
+                <option value="price-desc" ${f.sort==='price-desc'?'selected':''}>Price High-Low</option>
+                <option value="rating" ${f.sort==='rating'?'selected':''}>Top Rated</option>
+              </select>
+            </div>
+          </div>
+        </aside>
+        <div class="flex-1">
+
+          <p class="text-sm opacity-60 mb-4">${filtered.length} products found</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            ${filtered.map(p=>productCard(p)).join('')}
+          </div>
+          ${filtered.length===0?'<p class="text-center opacity-50 py-20">No products match your filters.</p>':''}
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderProductDetail() {
+  const p = products.find(x=>x.id===state.pageData);
+  if(!p) return '<p class="text-center py-20">Product not found</p>';
+  const specRows = Object.entries(p.specs).map(([k,v])=>`<tr class="border-b border-white/5"><td 
+
+class="py-2 pr-4 opacity-60 text-sm">${k}</td><td class="py-2 text-sm font-medium">${v}</td></tr>`).join('');
+  return `<section class="px-4 py-10">
+    <div class="max-w-5xl mx-auto">
+      <button onclick="navigate('products')" class="flex items-center gap-2 text-sm opacity-60 hover:opacity-100 transition mb-6"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
+      <div class="grid md:grid-cols-2 gap-10">
+        <div class="glass rounded-2xl p-10 flex items-center justify-center"><span class="text-8xl md:text-9xl">${p.emoji}</span></div>
+        <div>
+          <span class="text-xs font-medium uppercase tracking-wider opacity-50">${p.cat}</span>
+          <h1 class="font-heading font-bold text-3xl md:text-4xl mt-2 mb-3">${p.name}</h1>
+          <div class="flex items-center gap-2 
+
+mb-4">${stars(p.rating)}<span class="text-sm opacity-60">(${p.reviews} reviews)</span></div>
+          <p class="opacity-70 mb-6">${p.desc}</p>
+          <p class="font-heading font-bold text-3xl gradient-text mb-6">$${p.price.toLocaleString()}</p>
+          <div class="flex gap-3 mb-8">
+            <button onclick="addToCart(${p.id})" class="btn-primary px-6 py-3 rounded-xl font-medium flex items-center gap-2"><i data-lucide="shopping-cart" class="w-4 h-4"></i> Add to Cart</button>
+            <button onclick="toggleWishlist(${p.id})" class="px-6 py-3 rounded-xl border border-white/20 hover:bg-white/10 transition flex items-center gap-2"><i data-lucide="heart" class="w-4 h-4 ${state.wishlist.includes(p.id)?'text-neon-pink fill-current':''}"></i> Wishlist</button>
+          </div>
+          <div class="glass rounded-xl p-5"><h3 class="font-heading font-semibold 
+
+mb-3">Specifications</h3><table class="w-full">${specRows}</table></div>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderCart() {
+  if(state.cart.length===0) return `<section class="px-4 py-20 text-center"><div class="text-6xl mb-4">🛒</div><h2 class="font-heading font-bold text-2xl mb-2">Cart is Empty</h2><p class="opacity-60 mb-6">Add some amazing tech!</p><button onclick="navigate('products')" class="btn-primary px-6 py-3 rounded-xl">Browse Products</button></section>`;
+  const total = state.cart.reduce((s,i)=>{const p=products.find(x=>x.id===i.id);return s+(p?p.price*i.qty:0);},0);
+  return `<section class="px-4 py-10"><div class="max-w-3xl mx-auto">
+
+    <h1 class="font-heading font-bold text-3xl mb-8">Your Cart</h1>
+    <div class="space-y-4 mb-8">${state.cart.map(item=>{
+      const p=products.find(x=>x.id===item.id); if(!p) return '';
+      return `<div class="glass rounded-xl p-4 flex items-center gap-4">
+        <span class="text-3xl">${p.emoji}</span>
+        <div class="flex-1 min-w-0"><h3 class="font-medium truncate">${p.name}</h3><p class="text-sm opacity-60">$${p.price.toLocaleString()}</p></div>
+        <div class="flex items-center gap-2">
+          <button onclick="updateQty(${p.id},-1)" class="w-7 h-7 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 text-sm">−</button>
+          <span class="w-6 text-center text-sm">${item.qty}</span>
+
+          <button onclick="updateQty(${p.id},1)" class="w-7 h-7 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 text-sm">+</button>
+        </div>
+        <span class="font-heading font-bold w-20 text-right">$${(p.price*item.qty).toLocaleString()}</span>
+        <button onclick="removeFromCart(${p.id})" class="text-red-400 hover:text-red-300 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div>`;
+    }).join('')}</div>
+    <div class="glass rounded-xl p-6 flex items-center justify-between">
+      <span class="font-heading font-bold text-xl">Total: <span class="gradient-text">$${total.toLocaleString()}</span></span>
+      <button onclick="navigate('checkout')" class="btn-primary px-6 py-3 rounded-xl font-medium">Checkout</button>
+    </div>
+  </div></section>`;
+
+}
+
+function updateQty(id, delta) {
+  const item = state.cart.find(i=>i.id===id);
+  if(item) { item.qty+=delta; if(item.qty<=0) state.cart=state.cart.filter(i=>i.id!==id); }
+  saveState(); renderPage();
+}
+function removeFromCart(id) { state.cart=state.cart.filter(i=>i.id!==id); saveState(); renderPage(); }
+
+function renderWishlist() {
+  const items = state.wishlist.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+  if(items.length===0) return `<section class="px-4 py-20 text-center"><div class="text-6xl mb-4">♥</div><h2 class="font-heading font-bold text-2xl mb-2">Wishlist Empty</h2><p class="opacity-60 mb-6">Save items you love!</p><button 
+
+onclick="navigate('products')" class="btn-primary px-6 py-3 rounded-xl">Browse Products</button></section>`;
+  return `<section class="px-4 py-10"><div class="max-w-7xl mx-auto">
+    <h1 class="font-heading font-bold text-3xl mb-8">Wishlist</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">${items.map(p=>productCard(p)).join('')}</div>
+  </div></section>`;
+}
+
+function renderCheckout() {
+  return `<section class="px-4 py-10"><div class="max-w-2xl mx-auto">
+    <h1 class="font-heading font-bold text-3xl mb-2">Checkout</h1>
+    <p class="text-xs bg-neon-purple/20 text-neon-purple px-3 py-1.5 rounded-full inline-block mb-8">⚡ Demo Only — No real payment processed</p>
+    <form 
+
+onsubmit="event.preventDefault();showToast('Order placed! (Demo)');state.cart=[];saveState();navigate('home');" class="space-y-5">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label for="fn" class="text-xs opacity-60 block mb-1">First Name</label><input id="fn" required class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue"></div>
+        <div><label for="ln" class="text-xs opacity-60 block mb-1">Last Name</label><input id="ln" required class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue"></div>
+      </div>
+      <div><label for="em" class="text-xs opacity-60 block mb-1">Email</label><input id="em" type="email" required class="w-full 
+
+bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue"></div>
+      <div><label for="addr" class="text-xs opacity-60 block mb-1">Address</label><input id="addr" required class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue"></div>
+      <button type="submit" class="btn-primary w-full py-3 rounded-xl font-heading font-semibold">Place Order (Demo)</button>
+    </form>
+  </div></section>`;
+}
+
+function renderBlog() {
+  return `<section class="px-4 py-10"><div class="max-w-4xl mx-auto">
+    <h1 class="font-heading font-bold text-3xl md:text-4xl mb-8">Blog</h1>
+
+    <div class="space-y-6">${blogPosts.map(b=>`
+      <article class="glass rounded-2xl p-6 card-hover cursor-pointer">
+        <div class="flex items-start gap-4">
+          <span class="text-3xl">${b.emoji}</span>
+          <div><span class="text-xs opacity-50">${b.date}</span><h3 class="font-heading font-bold text-lg mt-1">${b.title}</h3><p class="opacity-60 text-sm mt-2">${b.excerpt}</p></div>
+        </div>
+      </article>`).join('')}
+    </div>
+  </div></section>`;
+}
+
+function renderAbout() {
+  return `<section class="px-4 py-10"><div class="max-w-3xl mx-auto text-center">
+    <h1 class="font-heading font-bold text-3xl md:text-4xl mb-6">About 
+
+NovaTech</h1>
+    <p class="opacity-70 text-lg mb-8">We believe technology should be beautiful, accessible, and empowering. Founded in 2020, NovaTech curates the finest tech products from around the world.</p>
+    <div class="grid sm:grid-cols-3 gap-6">
+      <div class="glass rounded-2xl p-6"><div class="text-3xl mb-3">🌍</div><h3 class="font-heading font-bold">Global Reach</h3><p class="text-sm opacity-60 mt-1">Shipping to 120+ countries</p></div>
+      <div class="glass rounded-2xl p-6"><div class="text-3xl mb-3">💎</div><h3 class="font-heading font-bold">Premium Quality</h3><p class="text-sm opacity-60 mt-1">Only top-tier products</p></div>
+      <div class="glass rounded-2xl p-6"><div class="text-3xl mb-3">🤝</div><h3 class="font-heading font-bold">Customer First</h3><p class="text-sm opacity-60 mt-1">24/7 dedicated support</p></div>
+    </div>
+  </div></section>`;
+
+}
+
+function renderContact() {
+  return `<section class="px-4 py-10"><div class="max-w-2xl mx-auto">
+    <h1 class="font-heading font-bold text-3xl md:text-4xl mb-8 text-center">Contact Us</h1>
+    <form onsubmit="event.preventDefault();showToast('Message sent! We\\'ll reply soon.');this.reset();" class="glass rounded-2xl p-8 space-y-5">
+      <div><label for="cname" class="text-xs opacity-60 block mb-1">Name</label><input id="cname" required class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue"></div>
+      <div><label for="cemail" class="text-xs opacity-60 block mb-1">Email</label><input id="cemail" type="email" required class="w-full bg-white/5 border border-white/10 
+
+rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue"></div>
+      <div><label for="cmsg" class="text-xs opacity-60 block mb-1">Message</label><textarea id="cmsg" rows="4" required class="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-neon-blue resize-none"></textarea></div>
+      <button type="submit" class="btn-primary w-full py-3 rounded-xl font-heading font-semibold">Send Message</button>
+    </form>
+  </div></section>`;
+}
+
+function renderFAQ() {
+  const faqs = [
+    {q:'What is the return policy?', a:'We offer a 30-day hassle-free return policy on all products in original condition.'},
+    {q:'How long does shipping take?', 
+
+a:'Standard shipping takes 3-5 business days. Express options available at checkout.'},
+    {q:'Do you offer warranty?', a:'All products come with a 2-year manufacturer warranty plus our NovaTech protection plan.'},
+    {q:'Can I track my order?', a:'Yes! You will receive a tracking number via email once your order ships.'},
+    {q:'Do you ship internationally?', a:'We ship to 120+ countries worldwide with competitive rates.'}
+  ];
+  return `<section class="px-4 py-10"><div class="max-w-3xl mx-auto">
+    <h1 class="font-heading font-bold text-3xl md:text-4xl mb-8 text-center">FAQ</h1>
+    <div class="space-y-4">${faqs.map((f,i)=>`
+      <details class="glass rounded-xl group" ${i===0?'open':''}>
+        <summary class="px-6 py-4 cursor-pointer font-heading font-medium flex items-center justify-between list-none">
+          ${f.q} <i data-lucide="chevron-down" 
+
+class="w-4 h-4 transition-transform group-open:rotate-180"></i>
+        </summary>
+        <div class="px-6 pb-4 opacity-70 text-sm">${f.a}</div>
+      </details>`).join('')}
+    </div>
+  </div></section>`;
+}
+
+function renderCompare() {
+  const items = state.compare.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+  if(items.length<2) return `<section class="px-4 py-20 text-center"><p class="opacity-60">Add at least 2 items to compare.</p></section>`;
+  const allSpecs = [...new Set(items.flatMap(p=>Object.keys(p.specs)))];
+  return `<section class="px-4 py-10"><div class="max-w-5xl mx-auto">
+
+    <h1 class="font-heading font-bold text-3xl mb-8">Compare Products</h1>
+    <div class="glass rounded-2xl overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead><tr class="border-b border-white/10">
+          <th class="p-4 text-left opacity-60">Feature</th>
+          ${items.map(p=>`<th class="p-4 text-center"><span class="text-3xl">${p.emoji}</span><div class="font-heading font-semibold mt-2">${p.name}</div><div class="gradient-text font-bold">$${p.price.toLocaleString()}</div></th>`).join('')}
+        </tr></thead>
+        <tbody>
+          <tr class="border-b border-white/5"><td class="p-4 opacity-60">Rating</td>${items.map(p=>`<td class="p-4 text-center">${stars(p.rating)}</td>`).join('')}</tr>
+          ${allSpecs.map(spec=>`<tr 
+
+class="border-b border-white/5"><td class="p-4 opacity-60">${spec}</td>${items.map(p=>`<td class="p-4 text-center">${p.specs[spec]||'—'}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div></section>`;
+}
+
+// ===== PARTICLES =====
+function initParticles() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let mouse = {x:-1000, y:-1000};
+  let w, h;
+
+  function resize() { w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+
+  resize(); window.addEventListener('resize', resize);
+  document.addEventListener('mousemove', e=>{ mouse.x=e.clientX; mouse.y=e.clientY; });
+
+  for(let i=0;i<50;i++) particles.push({ x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3, r:Math.random()*2+1 });
+
+  function draw() {
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      const dx=mouse.x-p.x, dy=mouse.y-p.y, dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<150) { p.vx-=dx*0.00005; p.vy-=dy*0.00005; }
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>w) p.vx*=-1;
+      if(p.y<0||p.y>h) p.vy*=-1;
+      const alpha = dist<150 ? 0.6 : 0.2;
+
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,212,255,${alpha})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ===== CURSOR =====
+function initCursor() {
+  if(window.innerWidth<768) return;
+  const dot=document.getElementById('cursor-dot'), glow=document.getElementById('cursor-glow');
+  let cx=0,cy=0,gx=0,gy=0;
+  document.addEventListener('mousemove',e=>{ cx=e.clientX; cy=e.clientY; });
+  document.addEventListener('mousedown',()=>{ dot.style.transform='scale(0.5)'; setTimeout(()=>dot.style.transform='scale(1)',
+
+150); });
+
+  function update() {
+    gx+=(cx-gx)*0.12; gy+=(cy-gy)*0.12;
+    dot.style.left=cx-4+'px'; dot.style.top=cy-4+'px';
+    glow.style.left=gx-20+'px'; glow.style.top=gy-20+'px';
+    requestAnimationFrame(update);
+  }
+  update();
+
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest('button,a,[onclick]')) { dot.style.transform='scale(2)'; glow.style.width='60px'; glow.style.height='60px'; glow.style.opacity='0.8'; }
+  });
+  document.addEventListener('mouseout',e=>{
+
+    if(e.target.closest('button,a,[onclick]')) { dot.style.transform='scale(1)'; glow.style.width='40px'; glow.style.height='40px'; glow.style.opacity='1'; }
+  });
+}
+
+// ===== ELEMENT SDK =====
+const defaultConfig = {
+  store_name: 'NovaTech',
+  hero_headline: 'Future of Tech',
+  hero_subtext: 'Discover next-generation devices crafted for tomorrow. Premium quality meets cutting-edge innovation.',
+  background_color: '#0a0a0f',
+  surface_color: '#1a1a2e',
+  text_color: '#ffffff',
+  primary_action_color: '#00d4ff',
+  secondary_action_color: '#7c3aed',
+  font_family: 'Outfit',
+  font_size: 16
+};
+
+window.elementSdk.init({
+  defaultConfig,
+  onConfigChange: async (config) => {
+    const sn = document.getElementById('nav-store-name');
+    if(sn) sn.textContent = config.store_name || defaultConfig.store_name;
+    const hh = document.getElementById('hero-headline');
+    if(hh) hh.textContent = config.hero_headline || defaultConfig.hero_headline;
+    const hs = document.getElementById('hero-subtext');
+    if(hs) hs.textContent = config.hero_subtext || defaultConfig.hero_subtext;
+
+    const font = config.font_family || defaultConfig.font_family;
+    const size = config.font_size || defaultConfig.font_size;
+    document.querySelectorAll('.font-heading').forEach(el=>el.style.fontFamily=`${font}, Outfit, sans-serif`);
+    document.body.style.fontSize = size + 'px';
+  },
+  mapToCapabilities: (config) => ({
+    recolorables: [
+      { get:()=>config.background_color||defaultConfig.background_color, set:(v)=>{config.background_color=v;window.elementSdk.setConfig({background_color:v})} },
+      { get:()=>config.surface_color||defaultConfig.surface_color, set:(v)=>{config.surface_color=v;window.elementSdk.setConfig({surface_color:v})} },
+      { get:()=>config.text_color||defaultConfig.text_color, set:(v)=>{config.text_color=v;window.elementSdk.setConfig({text_color:v})} },
+      { get:()=>config.primary_action_color||defaultConfig.primary_action_color, set:(v)=>{config.primary_action_color=v;window.elementSdk.setConfig({primary_action_color:v})} },
+      { get:()=>config.secondary_action_color||
+
+defaultConfig.secondary_action_color, set:(v)=>{config.secondary_action_color=v;window.elementSdk.setConfig({secondary_action_color:v})} }
+    ],
+    borderables: [],
+    fontEditable: { get:()=>config.font_family||defaultConfig.font_family, set:(v)=>{config.font_family=v;window.elementSdk.setConfig({font_family:v})} },
+    fontSizeable: { get:()=>config.font_size||defaultConfig.font_size, set:(v)=>{config.font_size=v;window.elementSdk.setConfig({font_size:v})} }
+  }),
+  mapToEditPanelValues: (config) => new Map([
+    ['store_name', config.store_name || defaultConfig.store_name],
+    ['hero_headline', config.hero_headline || defaultConfig.hero_headline],
+    ['hero_subtext', config.hero_subtext || defaultConfig.hero_subtext]
+
+  ])
+});
+
+// ===== INIT =====
+updateBadges();
+renderPage();
+initParticles();
+initCursor();
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9f5a496f26c7d87f',t:'MTc3Nzc1OTEwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var 
+
+a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
