@@ -24,6 +24,10 @@ while ($row = mysqli_fetch_assoc($result)) {
 <script>
     const productsFromDB = <?= json_encode($products, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ?>;
     console.log('Products loaded:', productsFromDB.length, productsFromDB[0]?.name);
-</script>
 
+    // Provide safe defaults for review‑related data (not yet implemented)
+    const loggedInUserId   = <?= isset($_SESSION['user_id']) ? json_encode($_SESSION['user_id']) : 'null' ?>;
+    const loggedInUserName = <?= isset($_SESSION['full_name']) ? json_encode($_SESSION['full_name']) : 'null' ?>;
+    const reviewsByProduct = {};   // empty until you build the backend
+</script>
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
