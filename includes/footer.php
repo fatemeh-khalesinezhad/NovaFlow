@@ -887,10 +887,23 @@ function renderCart(){
 }
 // CHECKOUT
 function renderCheckout(){
-  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  // If not logged in, show a friendly login prompt
+  if (!loggedInUserId) {
+    return `<div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 text-center">
+      <div class="glass rounded-2xl p-10">
+        <h2 class="font-display text-2xl font-bold mb-4 gradient-text">Login Required</h2>
+        <p class="text-gray-400 mb-6">You must be logged in to place an order.</p>
+        <button onclick="openAuth()" class="btn-glow px-6 py-3 bg-gradient-to-r from-neon-purple to-neon-blue rounded-xl font-semibold">
+          Sign In / Register
+        </button>
+      </div>
+    </div>`;
+  }
+
+  // Normal checkout form for logged‑in users
+  const total = cart.reduce((s,i) => s + i.price * i.qty, 0);
   return `<div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
     <button onclick="navigateTo('cart')" class="flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-6 transition"><i data-lucide="arrow-left" class="w-4 h-4"></i>Back to Cart</button>
-
     <h1 class="font-display text-3xl font-bold mb-8">Checkout</h1>
     <div class="inline-block px-3 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-xs text-yellow-400 mb-6">⚠️ Demo — no real payment is processed</div>
     <form onsubmit="handleCheckout(event)" class="space-y-8">
@@ -902,7 +915,7 @@ function renderCheckout(){
         <div><label class="text-xs text-gray-500 mb-1 block" for="co-mobile">Mobile Number</label><input id="co-mobile" type="text" required class="w-full px-4 py-3 bg-dark-700 border border-white/10 rounded-xl text-white focus:border-neon-blue focus:outline-none transition"></div>
       </div></div>
       <div class="glass rounded-2xl p-6"><h2 class="font-display font-semibold text-lg mb-4">Order Summary</h2>
-        <div class="space-y-3">${cart.map(i=>`<div class="flex justify-between text-sm"><span class="text-gray-400">${i.name} × ${i.qty}</span><span>$${(i.price*i.qty).toLocaleString()}</span></div>`).join('')}
+        <div class="space-y-3">${cart.map(i => `<div class="flex justify-between text-sm"><span class="text-gray-400">${i.name} × ${i.qty}</span><span>$${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}
           <div class="border-t border-white/10 pt-3 flex justify-between"><span class="font-semibold">Total</span><span class="font-display font-bold gradient-text text-xl">$${total.toLocaleString()}</span></div>
         </div>
       </div>

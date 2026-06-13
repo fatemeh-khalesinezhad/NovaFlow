@@ -28,38 +28,36 @@ function validateImage($file) {
     $target_dir = __DIR__ . '/../../uploads/products/';
     $image_name = basename($file["name"]);
     $target_file = $target_dir . $image_name;
-    $uploadOk = 1;
 
     // 1. Check if file is a real image
     $check = getimagesize($file["tmp_name"]);
     if ($check === false) {
-        echo "<p style='color:red;'><b>Error: The selected file is not a valid image.</b></p>";
-        $uploadOk = 0;
+        $_SESSION['admin_error'] = 'Error: The selected file is not a valid image.';
+        return false;
     }
 
-    // 2. Check if file already exists (optional – you can also generate a unique name instead)
-    if ($uploadOk && file_exists($target_file)) {
-        echo "<p style='color:red;'><b>Error: A file with the same name already exists on the server.</b></p>";
-        $uploadOk = 0;
+    // 2. Check if file already exists
+    if (file_exists($target_file)) {
+        $_SESSION['admin_error'] = 'Error: A file with the same name already exists.';
+        return false;
     }
 
-    // 3. Limit file size (5000 KB)
-    if ($uploadOk && $file["size"] > 5000 * 1024) {
-        echo "<p style='color:red;'><b>Error: File size exceeds 5000 KB.</b></p>";
-        $uploadOk = 0;
+    // 3. Limit file size (5 MB)
+    if ($file["size"] > 5 * 1024 * 1024) {
+        $_SESSION['admin_error'] = 'Error: File size exceeds 5 MB.';
+        return false;
     }
 
     // 4. Allow only specific extensions
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-    if ($uploadOk && !in_array($imageFileType, $allowed)) {
-        echo "<p style='color:red;'><b>Error: Only JPG, JPEG, PNG, and GIF files are allowed.</b></p>";
-        $uploadOk = 0;
+    if (!in_array($imageFileType, $allowed)) {
+        $_SESSION['admin_error'] = 'Error: Only JPG, JPEG, PNG, and GIF files are allowed.';
+        return false;
     }
 
-    return $uploadOk ? $image_name : false;
+    return $image_name;
 }
-
 // ---------- ADD ----------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'add') {
     $name        = mysqli_real_escape_string($link, $_POST['name']);
