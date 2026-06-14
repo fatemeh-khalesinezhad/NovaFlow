@@ -3,8 +3,7 @@
 *A full‑stack e‑commerce website built as a final project for an advanced web development course –  
 dark neon aesthetic, powerful admin panel, and hidden Easter eggs.*
 
-![NovaFlow Store](https://via.placeholder.com/1000x400/0a0a0f/00d4ff?text=NovaFlow+Store+%E2%80%A2+Future+of+Tech)  
-*(replace with a real screenshot of your homepage)*
+![NovaFlow Store](assets/images/screenshot.png)
 
 [![Tech Stack](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)](#)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](#)
