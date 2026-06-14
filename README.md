@@ -100,11 +100,16 @@ Three secret surprises that open in new tabs with the NovaFlow favicon:
 
 ## 🔑 Demo Accounts
 
-| Role        | Email                   | Password   |
-|-------------|-------------------------|------------|
-| Admin       | admin@novaflow.com      | admin123   |
-| User        | user@novaflow.com       | user1234   |
-| Nazanin CIP | nazanincip@novaflow.com | 2009       |
+| Role            | Email                        | Password   |
+|-----------------|------------------------------|------------|
+| Admin           | admin@novaflow.com           | admin123   |
+| User            | user@novaflow.com            | user1234   |
+| Nazanin CIP     | nazanincip@novaflow.com      | 2009       |
+| Jake Williams   | jake.williams@novaflow.com   | user1234   |
+| Emily Johnson   | emily.johnson@novaflow.com   | user1234   |
+| Mike Chen       | mike.chen@novaflow.com       | user1234   |
+| Sophia Martinez | sophia.martinez@novaflow.com | user1234   |
+| Ryan Thompson   | ryan.thompson@novaflow.com   | user1234   |
 
 ## 📁 Project Structure
 
