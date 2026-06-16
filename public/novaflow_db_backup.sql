@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 14, 2026 at 12:09 AM
+-- Generation Time: Jun 16, 2026 at 03:51 PM
 -- Server version: 9.1.0
 -- PHP Version: 8.3.14
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `contact_messages` (
   `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `contact_messages`
@@ -47,7 +47,8 @@ INSERT INTO `contact_messages` (`id`, `name`, `email`, `subject`, `message`, `cr
 (8, 'Emily Johnson', 'emily.johnson@novaflow.com', 'Shipping to Europe', 'Do you offer express shipping to Germany? I need a laptop before my semester starts.', '2026-06-14 00:06:10'),
 (9, 'Mike Chen', 'mike.chen@novaflow.com', 'Pulse Gaming restock', 'When will the Pulse Gaming phone be back in stock? I’ve been waiting for weeks!', '2026-06-14 00:06:10'),
 (10, 'Sophia Martinez', 'sophia.martinez@novaflow.com', 'AeroBeats Max sound quality', 'I just received my AeroBeats Max – the sound is incredible! Just wanted to say thanks.', '2026-06-14 00:06:10'),
-(11, 'Ryan Thompson', 'ryan.thompson@novaflow.com', 'Business discount inquiry', 'I’m ordering 10 Nova Air laptops for my startup. Do you offer bulk discounts?', '2026-06-14 00:06:10');
+(11, 'Ryan Thompson', 'ryan.thompson@novaflow.com', 'Business discount inquiry', 'I’m ordering 10 Nova Air laptops for my startup. Do you offer bulk discounts?', '2026-06-14 00:06:10'),
+(12, 'User', 'user@novaflow.com', '', '', '2026-06-16 15:35:42');
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
@@ -95,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `order_items`
@@ -112,7 +113,9 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) 
 (21, 8, 12, 1, 1499.00),
 (20, 8, 22, 1, 449.00),
 (19, 8, 27, 1, 799.00),
-(18, 8, 1, 1, 2499.00);
+(18, 8, 1, 1, 2499.00),
+(29, 15, 5, 1, 1299.00),
+(30, 15, 1, 1, 2499.00);
 
 -- --------------------------------------------------------
 
@@ -143,11 +146,11 @@ CREATE TABLE IF NOT EXISTS `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `category`, `price`, `rating`, `reviews`, `emoji`, `description`, `specs`, `image`, `stock`, `created_at`, `featured`) VALUES
-(1, 'Nova Pro 16\"', 'laptops', 2499.00, 4.9, 342, '💻', 'Ultimate performance laptop with M3 chip', '{\"CPU\": \"M3 Ultra\", \"RAM\": \"64GB\", \"Display\": \"16\\\" Retina XDR\", \"Storage\": \"2TB SSD\"}', 'nova-pro-16.png', 6, '2026-05-14 15:28:38', 0),
-(2, 'Nova Air 14\"', 'laptops', 1599.00, 4.7, 521, '💻', 'Thin & light with all-day battery', '{\"CPU\": \"M3 Pro\", \"RAM\": \"32GB\", \"Display\": \"14\\\" Liquid Retina\", \"Storage\": \"1TB SSD\"}', 'nova-air-14.png', 5, '2026-05-14 15:28:38', 0),
-(3, 'Nova Book 13\"', 'laptops', 999.00, 4.5, 892, '💻', 'Perfect everyday laptop', '{\"CPU\": \"M3\", \"RAM\": \"16GB\", \"Display\": \"13.6\\\" Retina\", \"Storage\": \"512GB SSD\"}', 'nova-book-13.png', 9, '2026-05-14 15:28:38', 0),
+(1, 'Nova Pro 16\"', 'laptops', 2499.00, 5.0, 1, '💻', 'Ultimate performance laptop with M3 chip', '{\"CPU\": \"M3 Ultra\", \"RAM\": \"64GB\", \"Display\": \"16\\\" Retina XDR\", \"Storage\": \"2TB SSD\"}', 'nova-pro-16.png', 5, '2026-05-14 15:28:38', 0),
+(2, 'Nova Air 14\"', 'laptops', 1599.00, 4.0, 1, '💻', 'Thin & light with all-day battery', '{\"CPU\": \"M3 Pro\", \"RAM\": \"32GB\", \"Display\": \"14\\\" Liquid Retina\", \"Storage\": \"1TB SSD\"}', 'nova-air-14.png', 5, '2026-05-14 15:28:38', 0),
+(3, 'Nova Book 13\"', 'laptops', 999.00, 4.0, 1, '💻', 'Perfect everyday laptop', '{\"CPU\": \"M3\", \"RAM\": \"16GB\", \"Display\": \"13.6\\\" Retina\", \"Storage\": \"512GB SSD\"}', 'nova-book-13.png', 9, '2026-05-14 15:28:38', 0),
 (4, 'Nova Studio 15\"', 'laptops', 3299.00, 4.8, 156, '💻', 'Creative workstation powerhouse', '{\"CPU\": \"M3 Max\", \"RAM\": \"128GB\", \"Display\": \"15.3\\\" XDR\", \"Storage\": \"4TB SSD\"}', 'nova-studio-15.png', 10, '2026-05-14 15:28:38', 0),
-(5, 'Nova Flex 360', 'laptops', 1299.00, 4.4, 267, '💻', 'Convertible 2-in-1 laptop', '{\"CPU\": \"Intel i7\", \"RAM\": \"16GB\", \"Display\": \"14\\\" Touch OLED\", \"Storage\": \"512GB\"}', 'nova-flex-360.png', 9, '2026-05-14 15:28:38', 0),
+(5, 'Nova Flex 360', 'laptops', 1299.00, 4.4, 267, '💻', 'Convertible 2-in-1 laptop', '{\"CPU\": \"Intel i7\", \"RAM\": \"16GB\", \"Display\": \"14\\\" Touch OLED\", \"Storage\": \"512GB\"}', 'nova-flex-360.png', 8, '2026-05-14 15:28:38', 0),
 (6, 'Nova Edge', 'laptops', 1899.00, 4.6, 178, '💻', 'Gaming-ready thin laptop', '{\"CPU\": \"AMD R9\", \"RAM\": \"32GB\", \"Display\": \"15.6\\\" 240Hz\", \"Storage\": \"1TB\"}', 'nova-edge.png', 10, '2026-05-14 15:28:38', 0),
 (7, 'Nova Chromebook', 'laptops', 449.00, 4.2, 1205, '💻', 'Cloud-first lightweight laptop', '{\"CPU\": \"MediaTek\", \"RAM\": \"8GB\", \"Display\": \"14\\\" FHD\", \"Storage\": \"128GB\"}', 'nova-chromebook.png', 10, '2026-05-14 15:28:38', 0),
 (8, 'Nova Ultra 17\"', 'laptops', 3999.00, 5.0, 89, '💻', 'No-compromise desktop replacement', '{\"CPU\": \"M3 Ultra\", \"RAM\": \"192GB\", \"Display\": \"17\\\" XDR\", \"Storage\": \"8TB SSD\"}', 'nova-ultra-17.png', 10, '2026-05-14 15:28:38', 0),
@@ -158,9 +161,9 @@ INSERT INTO `products` (`id`, `name`, `category`, `price`, `rating`, `reviews`, 
 (13, 'Pulse Fold', 'smartphones', 1799.00, 4.6, 423, '📱', 'Foldable future in your pocket', '{\"RAM\": \"12GB\", \"Chip\": \"A18 Pro\", \"Display\": \"7.6\\\" Fold\", \"Storage\": \"512GB\"}', 'pulse-fold.png', 10, '2026-05-14 15:28:38', 0),
 (14, 'Pulse Mini', 'smartphones', 799.00, 4.4, 1876, '📱', 'Compact powerhouse', '{\"RAM\": \"8GB\", \"Chip\": \"A18\", \"Display\": \"5.4\\\" OLED\", \"Storage\": \"256GB\"}', 'pulse-mini.png', 10, '2026-05-14 15:28:38', 0),
 (15, 'Pulse SE', 'smartphones', 429.00, 4.3, 5621, '📱', 'Affordable flagship experience', '{\"RAM\": \"6GB\", \"Chip\": \"A16\", \"Camera\": \"12MP\", \"Storage\": \"64GB\"}', 'pulse-se.png', 10, '2026-05-14 15:28:38', 0),
-(16, 'Pulse Gaming', 'smartphones', 899.00, 4.5, 982, '📱', 'Built for mobile gaming', '{\"RAM\": \"16GB\", \"Chip\": \"SD 8 Gen 3\", \"Display\": \"6.8\\\" 165Hz\", \"Storage\": \"512GB\"}', 'pulse-gaming.png', 8, '2026-05-14 15:28:38', 0),
+(16, 'Pulse Gaming', 'smartphones', 899.00, 5.0, 1, '📱', 'Built for mobile gaming', '{\"RAM\": \"16GB\", \"Chip\": \"SD 8 Gen 3\", \"Display\": \"6.8\\\" 165Hz\", \"Storage\": \"512GB\"}', 'pulse-gaming.png', 8, '2026-05-14 15:28:38', 0),
 (17, 'AeroBeats Pro', 'headphones', 349.00, 4.8, 4231, '🎧', 'Studio-quality noise cancellation', '{\"ANC\": \"Adaptive\", \"Driver\": \"40mm\", \"Battery\": \"30hrs\", \"Connectivity\": \"BT 5.3\"}', 'aerobeats-pro.png', 10, '2026-05-14 15:28:38', 0),
-(18, 'AeroBeats Max', 'headphones', 549.00, 4.9, 1234, '🎧', 'Premium over-ear audiophile grade', '{\"ANC\": \"Ultra\", \"Driver\": \"50mm Planar\", \"Battery\": \"40hrs\", \"Material\": \"Titanium\"}', 'aerobeats-max.png', 9, '2026-05-14 15:28:38', 0),
+(18, 'AeroBeats Max', 'headphones', 549.00, 5.0, 1, '🎧', 'Premium over-ear audiophile grade', '{\"ANC\": \"Ultra\", \"Driver\": \"50mm Planar\", \"Battery\": \"40hrs\", \"Material\": \"Titanium\"}', 'aerobeats-max.png', 9, '2026-05-14 15:28:38', 0),
 (19, 'AeroBuds Pro', 'headphones', 249.00, 4.7, 6789, '🎧', 'Perfect fit wireless earbuds', '{\"ANC\": \"Active\", \"Water\": \"IPX5\", \"Driver\": \"11mm\", \"Battery\": \"8hrs+24\"}', 'aerobuds-pro.png', 9, '2026-05-14 15:28:38', 0),
 (20, 'AeroBuds Lite', 'headphones', 129.00, 4.4, 9821, '🎧', 'Essential wireless audio', '{\"ANC\": \"None\", \"Water\": \"IPX4\", \"Driver\": \"8mm\", \"Battery\": \"6hrs+18\"}', 'aerobuds-lite.png', 10, '2026-05-14 15:28:38', 0),
 (21, 'AeroBeats Sport', 'headphones', 199.00, 4.5, 3421, '🎧', 'Workout-ready secure fit', '{\"ANC\": \"Transparency\", \"Water\": \"IP68\", \"Driver\": \"12mm\", \"Battery\": \"10hrs\"}', 'aerobeats-sport.png', 10, '2026-05-14 15:28:38', 0),
@@ -205,6 +208,17 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   KEY `product_id` (`product_id`),
   KEY `user_id` (`user_id`)
 ) ;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `product_id`, `user_id`, `rating`, `comment`, `created_at`) VALUES
+(1, 1, 18, 5, 'Absolutely incredible performance. The M3 Ultra chip flies through everything I throw at it.', '2026-06-16 15:42:04'),
+(2, 2, 19, 4, 'So light and the battery lasts all day. Perfect for university.', '2026-06-16 15:42:04'),
+(3, 16, 20, 5, 'Best gaming phone I have ever used. 165Hz display is a game changer!', '2026-06-16 15:42:04'),
+(4, 18, 21, 5, 'Sound quality is out of this world. Worth every penny.', '2026-06-16 15:42:04'),
+(5, 3, 22, 4, 'Great everyday laptop. Perfect for my startup team.', '2026-06-16 15:42:04');
 
 -- --------------------------------------------------------
 
