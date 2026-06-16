@@ -1041,7 +1041,7 @@ function renderAbout(){
 
 // CONTACT
 function renderContact(){
-  return `<div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+  return `<div class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
     <div class="text-center mb-12 animate-fade-up"><h1 class="font-display text-4xl sm:text-5xl font-bold gradient-text mb-4">Get in Touch</h1><p class="text-gray-400">We'd <a href="easter-egg/bongo-cat/index.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-neon-pink" style="text-decoration:none;">love</a> to hear from you. Send us a message!</p></div>
     <div class="grid lg:grid-cols-3 gap-8">
 
